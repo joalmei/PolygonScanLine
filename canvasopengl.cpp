@@ -1,16 +1,19 @@
 #include "canvasopengl.h"
+#include <iostream>
 
 // ==================================================================================================
 // PUBLIC MEMBERS
 // ==================================================================================================
-CanvasOpenGL::CanvasOpenGL(QWidget *parent) : QOpenGLWidget(parent) , nextPointColor(255,255,255){}
+CanvasOpenGL::CanvasOpenGL(QWidget *parent) : QOpenGLWidget(parent), pointsColor(255,255,255){
+}
 
 // ==================================================================================================
 CanvasOpenGL::~CanvasOpenGL() {}
 
 // ==================================================================================================
-void CanvasOpenGL::SetNextPointColor(QColor color) {
-    nextPointColor = color;
+void CanvasOpenGL::SetPointsColor(QColor color) {
+    pointsColor.setRgb(color.rgb());
+    this->update();
 }
 
 // ==================================================================================================
@@ -33,7 +36,7 @@ void CanvasOpenGL::paintGL() {
     QPainter painter(this);
 
     QPen myPen(1); // 1 px
-    myPen.setColor(nextPointColor);
+    myPen.setColor(pointsColor);
 
     painter.setPen(myPen);
 

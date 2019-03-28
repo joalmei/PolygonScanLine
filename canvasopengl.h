@@ -14,12 +14,12 @@ class CanvasOpenGL : public QOpenGLWidget {
 public:
     CanvasOpenGL(QWidget *parent);
     ~CanvasOpenGL();
-    void SetNextPointColor(QColor color);
+    void SetPointsColor(QColor color);
     void ClearScreen();
 
 private:
     vector<QPoint> vertices;
-    QColor nextPointColor;
+    QColor pointsColor;
 
 protected:
     void initializeGL();

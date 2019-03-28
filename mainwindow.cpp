@@ -1,5 +1,6 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
+#include <iostream>
 
 // ==================================================================================================
 // PUBLIC MEMBERS
@@ -11,9 +12,8 @@ MainWindow::MainWindow(QWidget *parent) :
 
     setWindowTitle(tr("Teste QT OK"));
 
-    QWidget* openGlBaseCanvas = ui->centralWidget->findChild<QWidget*>("CanvasOpenGL", Qt::FindChildrenRecursively);
-    openGlCanvas = new CanvasOpenGL(openGlBaseCanvas);
-    delete openGlBaseCanvas;
+    //auto widget = ui->centralWidget->findChild<QWidget*>("CanvasOpenGL", Qt::FindChildrenRecursively);
+    openGlCanvas = ui->centralWidget->findChild<CanvasOpenGL*>();
 }
 
 MainWindow::~MainWindow() {
@@ -33,18 +33,33 @@ void MainWindow::on_ClearButton_clicked() {
 
 // ==================================================================================================
 void MainWindow::on_ColorR_valueChanged(double red) {
+    if(openGlCanvas == nullptr) {
+        std::cout << "NULL " << std::endl;
+        return;
+    }
     color.setRed(static_cast<int>(red));
-    openGlCanvas->SetNextPointColor(color);
+    openGlCanvas->SetPointsColor(color);
+    std::cout << "red" << red << std::endl;
 }
 
 // ==================================================================================================
 void MainWindow::on_ColorG_valueChanged(double green) {
+    if(openGlCanvas == nullptr) {
+        std::cout << "NULL " << std::endl;
+        return;
+    }
     color.setGreen(static_cast<int>(green));
-    openGlCanvas->SetNextPointColor(color);
+    openGlCanvas->SetPointsColor(color);
+    std::cout << "green" << green << std::endl;
 }
 
 // ==================================================================================================
 void MainWindow::on_ColorB_valueChanged(double blue) {
+    if(openGlCanvas == nullptr) {
+        std::cout << "NULL " << std::endl;
+        return;
+    }
     color.setBlue(static_cast<int>(blue));
-    openGlCanvas->SetNextPointColor(color);
+    openGlCanvas->SetPointsColor(color);
+    std::cout << "blue" << blue << std::endl;
 }
