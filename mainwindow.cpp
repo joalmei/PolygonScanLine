@@ -7,7 +7,9 @@
 // ==================================================================================================
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
-    ui(new Ui::MainWindow) {
+    ui(new Ui::MainWindow),
+    color(255, 255, 255){
+
     ui->setupUi(this);
 
     setWindowTitle(tr("Teste QT OK"));
