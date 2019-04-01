@@ -19,12 +19,17 @@ void PolygonDrawer::Draw(CanvasOpenGL*canvas, std::vector<QPoint>& vertices, QCo
     painter.setPen(myPen);
     painter.setBrush(brush);
 
+    // qt built-in method that implements the MidPointAlgorithm:
+    painter.drawPolygon(vertices.data(), vertices.size(), Qt::OddEvenFill);
+    // our method to implement:
+    MidPointMethod(vertices, painter);
+}
+
+
+void PolygonDrawer::MidPointMethod(std::vector<QPoint>& vertices, QPainter& painter) {
     for (std::vector<QPoint>::iterator i = vertices.begin(); i != vertices.end(); i++) {
         painter.drawPoint(*i);
     }
-
-    painter.drawPolygon(vertices.data(), vertices.size(), Qt::OddEvenFill);
-
     /* EXAMPLE OF A WHITE SQUARE WITH SIZE 100 X 100
     for (int i = 100; i <= 200; i++) {
         for(int j = 100; j <= 200; j++) {
