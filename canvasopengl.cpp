@@ -17,6 +17,11 @@ void CanvasOpenGL::SetPointsColor(QColor color) {
 }
 
 // ==================================================================================================
+void CanvasOpenGL::SetDrawer(PolygonDrawer* drawer) {
+    this->drawer = drawer;
+}
+
+// ==================================================================================================
 void CanvasOpenGL::ClearScreen() {
     if(!this->vertices.empty()) {
         this->vertices.clear();
@@ -31,25 +36,8 @@ void CanvasOpenGL::initializeGL() {}
 
 // ==================================================================================================
 void CanvasOpenGL::paintGL() {
-    //create a QPainter and pass a pointer to the device.
-    //A paint device can be a QWidget, a QPixmap or a QImage
-    QPainter painter(this);
-
-    QPen myPen(1); // 1 px
-    myPen.setColor(pointsColor);
-
-    painter.setPen(myPen);
-
-    for (vector<QPoint>::iterator i = this->vertices.begin(); i != this->vertices.end(); i++) {
-        painter.drawPoint(*i);
-    }
-
-    /* EXAMPLE OF A WHITE SQUARE WITH SIZE 100 X 100
-     * for (int i = 100; i <= 200; i++) {
-        for(int j = 100; j <= 200; j++) {
-            painter.drawPoint(i, j);
-        }
-    }*/
+    if (drawer != nullptr)
+        drawer->Draw(this, vertices, pointsColor);
 }
 
 // ==================================================================================================

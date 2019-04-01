@@ -27,11 +27,13 @@ CONFIG += c++11
 SOURCES += \
         main.cpp \
         mainwindow.cpp \
-    canvasopengl.cpp
+    canvasopengl.cpp \
+    polygondrawer.cpp
 
 HEADERS += \
         mainwindow.h \
-    canvasopengl.h
+    canvasopengl.h \
+    polygondrawer.h
 
 FORMS += \
         mainwindow.ui

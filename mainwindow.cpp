@@ -35,33 +35,18 @@ void MainWindow::on_ClearButton_clicked() {
 
 // ==================================================================================================
 void MainWindow::on_ColorR_valueChanged(double red) {
-    if(openGlCanvas == nullptr) {
-        std::cout << "NULL " << std::endl;
-        return;
-    }
     color.setRed(static_cast<int>(red));
     openGlCanvas->SetPointsColor(color);
-    std::cout << "red" << red << std::endl;
 }
 
 // ==================================================================================================
 void MainWindow::on_ColorG_valueChanged(double green) {
-    if(openGlCanvas == nullptr) {
-        std::cout << "NULL " << std::endl;
-        return;
-    }
     color.setGreen(static_cast<int>(green));
     openGlCanvas->SetPointsColor(color);
-    std::cout << "green" << green << std::endl;
 }
 
 // ==================================================================================================
 void MainWindow::on_ColorB_valueChanged(double blue) {
-    if(openGlCanvas == nullptr) {
-        std::cout << "NULL " << std::endl;
-        return;
-    }
     color.setBlue(static_cast<int>(blue));
     openGlCanvas->SetPointsColor(color);
-    std::cout << "blue" << blue << std::endl;
 }
