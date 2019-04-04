@@ -19,6 +19,7 @@ MainWindow::MainWindow(QWidget *parent) :
     setWindowTitle(tr("Mid Point Algorithm Tester"));
 
     openGlCanvas = ui->centralWidget->findChild<CanvasOpenGL*>();
+    mouseFollower = new MouseFollower(openGlCanvas);
     initCanvas();
 }
 
@@ -26,6 +27,7 @@ MainWindow::MainWindow(QWidget *parent) :
 MainWindow::~MainWindow() {
     delete ui;
     delete openGlCanvas;
+    delete mouseFollower;
 }
 
 
@@ -35,17 +37,25 @@ MainWindow::~MainWindow() {
 void MainWindow::initCanvas() {
     // creates polygon drawer and subcribes to on mouse click event in canvas
     auto drawer = new PolygonDrawer();
-    openGlCanvas->OnMousePressed.push_back([drawer](QMouseEvent* e) {
+    drawer->Vertices.push_back(QPoint(0, 0));
+    mouseFollower->AddPoint(&(drawer->Vertices.back()));
+
+    openGlCanvas->OnMousePressed.push_back([drawer, this](QMouseEvent* e) {
+        mouseFollower->RemovePoint(&(drawer->Vertices.back()));
         drawer->Vertices.push_back(e->pos());
+        mouseFollower->AddPoint(&(drawer->Vertices.back()));
     });
     openGlCanvas->AddDrawer(drawer);
 
+    /*
     auto line = new LineDrawer();
     auto startPoint = new QPoint(0, 0);
     auto finalPoint = new QPoint(openGlCanvas->width(),openGlCanvas->height());
     auto follower = MouseFollower(finalPoint, openGlCanvas);
     line->Points = make_pair(startPoint, finalPoint);
     openGlCanvas->AddDrawer(line);
+    */
+
 }
 
 

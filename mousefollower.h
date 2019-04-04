@@ -3,11 +3,17 @@
 
 #include <qpoint.h>
 #include "canvasopengl.h"
+#include <unordered_set>
 
 class MouseFollower
 {
+private:
+    std::unordered_set<QPoint*> following;
+
 public:
-    MouseFollower(QPoint*, CanvasOpenGL*);
+    MouseFollower(CanvasOpenGL*);
+    void AddPoint(QPoint*);
+    void RemovePoint(QPoint*);
 };
 
 #endif // MOUSEFOLLOWER_H

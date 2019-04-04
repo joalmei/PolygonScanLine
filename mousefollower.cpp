@@ -2,9 +2,18 @@
 #include <iostream>
 
 
-MouseFollower::MouseFollower(QPoint* point, CanvasOpenGL* mouseCanvas) {
-    mouseCanvas->OnMouseMoved.push_back([point](QMouseEvent* e) {
-       point->setX(e->x());
-       point->setY(e->y());
+MouseFollower::MouseFollower(CanvasOpenGL* mouseCanvas) {
+    mouseCanvas->OnMouseMoved.push_back([this](QMouseEvent* e) {
+       for(auto point : this->following) {
+           point->setX(e->x());
+           point->setY(e->y());
+       }
     });
+}
+
+void MouseFollower::AddPoint(QPoint* point) {
+    following.insert(point);
+}
+void MouseFollower::RemovePoint(QPoint* point) {
+    following.erase(point);
 }

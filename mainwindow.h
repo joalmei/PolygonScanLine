@@ -3,6 +3,7 @@
 
 #include "canvasopengl.h"
 #include "polygondrawer.h"
+#include "mousefollower.h"
 
 #include <QMainWindow>
 #include <QtGui>
@@ -21,6 +22,7 @@ private:
     Ui::MainWindow *ui;
     CanvasOpenGL* openGlCanvas;
     QColor color;
+    MouseFollower* mouseFollower;
 
 public:
     explicit MainWindow(QWidget *parent = nullptr);
