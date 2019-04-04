@@ -1,6 +1,7 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
 #include "polygondrawer.h"
+#include "linedrawer.h"
 
 
 // ==================================================================================================
@@ -16,7 +17,7 @@ MainWindow::MainWindow(QWidget *parent) :
     setWindowTitle(tr("Teste QT OK"));
 
     openGlCanvas = ui->centralWidget->findChild<CanvasOpenGL*>();
-    createPolygonDrawer();
+    initCanvas();
 }
 
 // ==================================================================================================
@@ -29,13 +30,18 @@ MainWindow::~MainWindow() {
 // ==================================================================================================
 // PRIVATE MEMBERS
 // ==================================================================================================
-void MainWindow::createPolygonDrawer() {
+void MainWindow::initCanvas() {
     // creates polygon drawer and subcribes to on mouse click event in canvas
     auto drawer = new PolygonDrawer();
     openGlCanvas->OnMousePressed.push_back([drawer](QMouseEvent* e) {
         drawer->Vertices.push_back(e->pos());
     });
     openGlCanvas->AddDrawer(drawer);
+
+    // line drawer test
+    // auto line = new LineDrawer();
+    // line->Points = make_pair(QPoint(0,0), QPoint(openGlCanvas->width(),openGlCanvas->height()));
+    // openGlCanvas->AddDrawer(line);
 }
 
 
@@ -47,7 +53,7 @@ void MainWindow::on_ClearButton_clicked() {
     // To automatically create one, right click in the button/object and select "Go to slot"
     // and select the desired event. It will create the corresponding fct.
     this->ui->Canvas->ClearScreen();
-    createPolygonDrawer();
+    initCanvas();
 }
 
 // ==================================================================================================

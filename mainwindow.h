@@ -27,7 +27,7 @@ public:
     ~MainWindow();
 
 private:
-    void createPolygonDrawer();
+    void initCanvas();
 
 private slots:
     void on_ClearButton_clicked();
