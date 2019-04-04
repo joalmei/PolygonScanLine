@@ -1,6 +1,10 @@
 #include "polygondrawer.h"
 #include "canvasopengl.h"
 
+
+// ==================================================================================================
+// PUBLIC MEMBERS
+// ==================================================================================================
 PolygonDrawer::PolygonDrawer() {
 
 }
@@ -22,11 +26,14 @@ void PolygonDrawer::Draw(CanvasOpenGL*canvas, std::vector<QPoint>& vertices, QCo
     // qt built-in method that implements the MidPointAlgorithm:
     painter.drawPolygon(vertices.data(), vertices.size(), Qt::OddEvenFill);
     // our method to implement:
-    MidPointMethod(vertices, painter);
+    midPointMethod(vertices, painter);
 }
 
 
-void PolygonDrawer::MidPointMethod(std::vector<QPoint>& vertices, QPainter& painter) {
+// ==================================================================================================
+// PRIVATE MEMBERS
+// ==================================================================================================
+void PolygonDrawer::midPointMethod(std::vector<QPoint>& vertices, QPainter& painter) {
     for (std::vector<QPoint>::iterator i = vertices.begin(); i != vertices.end(); i++) {
         painter.drawPoint(*i);
     }

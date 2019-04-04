@@ -2,6 +2,7 @@
 #define MAINWINDOW_H
 
 #include "canvasopengl.h"
+
 #include <QMainWindow>
 #include <QtGui>
 #include <QWidget>
@@ -32,6 +33,7 @@ private slots:
 private:
     Ui::MainWindow *ui;
     CanvasOpenGL* openGlCanvas;
+    PolygonDrawer* canvasDrawer;
 
     QColor color;
 };

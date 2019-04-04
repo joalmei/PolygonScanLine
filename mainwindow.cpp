@@ -1,6 +1,6 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
-#include <iostream>
+
 
 // ==================================================================================================
 // PUBLIC MEMBERS
@@ -14,13 +14,15 @@ MainWindow::MainWindow(QWidget *parent) :
 
     setWindowTitle(tr("Teste QT OK"));
 
-    //auto widget = ui->centralWidget->findChild<QWidget*>("CanvasOpenGL", Qt::FindChildrenRecursively);
     openGlCanvas = ui->centralWidget->findChild<CanvasOpenGL*>();
+    canvasDrawer = new PolygonDrawer();
+    openGlCanvas->SetDrawer(canvasDrawer);
 }
 
 MainWindow::~MainWindow() {
     delete ui;
     delete openGlCanvas;
+    delete canvasDrawer;
 }
 
 // ==================================================================================================

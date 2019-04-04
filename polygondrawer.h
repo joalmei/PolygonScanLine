@@ -14,7 +14,7 @@ public:
     void Draw(CanvasOpenGL* canvas, std::vector<QPoint>& vertices, QColor pointsColor);
 
 private:
-    void MidPointMethod(std::vector<QPoint>& vertices, QPainter& painter);
+    void midPointMethod(std::vector<QPoint>& vertices, QPainter& painter);
 };
 
 #endif // POLYGONDRAWER_H
