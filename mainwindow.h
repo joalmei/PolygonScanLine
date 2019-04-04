@@ -11,16 +11,23 @@
 
 
 namespace Ui {
-class MainWindow;
+    class MainWindow;
 }
 
 class MainWindow : public QMainWindow {
     Q_OBJECT
 
-public:
+private:
+    Ui::MainWindow *ui;
+    CanvasOpenGL* openGlCanvas;
+    QColor color;
 
+public:
     explicit MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
+
+private:
+    void createPolygonDrawer();
 
 private slots:
     void on_ClearButton_clicked();
@@ -28,13 +35,6 @@ private slots:
     void on_ColorR_valueChanged(double arg1);
     void on_ColorG_valueChanged(double arg1);
     void on_ColorB_valueChanged(double arg1);
-
-private:
-    Ui::MainWindow *ui;
-    CanvasOpenGL* openGlCanvas;
-    PolygonDrawer* polygonDrawer;
-
-    QColor color;
 };
 
 #endif // MAINWINDOW_H

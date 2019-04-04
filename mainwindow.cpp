@@ -16,13 +16,7 @@ MainWindow::MainWindow(QWidget *parent) :
     setWindowTitle(tr("Teste QT OK"));
 
     openGlCanvas = ui->centralWidget->findChild<CanvasOpenGL*>();
-
-    // creates polygon drawer and subcribes to on mouse click event in canvas
-    polygonDrawer = new PolygonDrawer();
-    openGlCanvas->OnMousePressed.push_back([this](QMouseEvent* e) {
-        polygonDrawer->Vertices.push_back(e->pos());
-    });
-    openGlCanvas->AddDrawer(polygonDrawer);
+    createPolygonDrawer();
 }
 
 // ==================================================================================================
@@ -30,6 +24,20 @@ MainWindow::~MainWindow() {
     delete ui;
     delete openGlCanvas;
 }
+
+
+// ==================================================================================================
+// PRIVATE MEMBERS
+// ==================================================================================================
+void MainWindow::createPolygonDrawer() {
+    // creates polygon drawer and subcribes to on mouse click event in canvas
+    auto drawer = new PolygonDrawer();
+    openGlCanvas->OnMousePressed.push_back([drawer](QMouseEvent* e) {
+        drawer->Vertices.push_back(e->pos());
+    });
+    openGlCanvas->AddDrawer(drawer);
+}
+
 
 // ==================================================================================================
 // PRIVATE MEMBERS (slots)
@@ -39,10 +47,7 @@ void MainWindow::on_ClearButton_clicked() {
     // To automatically create one, right click in the button/object and select "Go to slot"
     // and select the desired event. It will create the corresponding fct.
     this->ui->Canvas->ClearScreen();
-
-    if (!polygonDrawer->Vertices.empty())
-        polygonDrawer->Vertices.clear();
-    openGlCanvas->AddDrawer(polygonDrawer);
+    createPolygonDrawer();
 }
 
 // ==================================================================================================
