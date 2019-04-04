@@ -1,5 +1,6 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
+#include "polygondrawer.h"
 
 
 // ==================================================================================================
@@ -16,9 +17,10 @@ MainWindow::MainWindow(QWidget *parent) :
 
     openGlCanvas = ui->centralWidget->findChild<CanvasOpenGL*>();
     canvasDrawer = new PolygonDrawer();
-    openGlCanvas->SetDrawer(canvasDrawer);
+    openGlCanvas->AddDrawer(canvasDrawer);
 }
 
+// ==================================================================================================
 MainWindow::~MainWindow() {
     delete ui;
     delete openGlCanvas;

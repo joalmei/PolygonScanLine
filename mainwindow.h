@@ -25,15 +25,13 @@ private slots:
     void on_ClearButton_clicked();
 
     void on_ColorR_valueChanged(double arg1);
-
     void on_ColorG_valueChanged(double arg1);
-
     void on_ColorB_valueChanged(double arg1);
 
 private:
     Ui::MainWindow *ui;
     CanvasOpenGL* openGlCanvas;
-    PolygonDrawer* canvasDrawer;
+    Drawer* canvasDrawer;
 
     QColor color;
 };

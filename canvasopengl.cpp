@@ -4,8 +4,7 @@
 // ==================================================================================================
 // PUBLIC MEMBERS
 // ==================================================================================================
-CanvasOpenGL::CanvasOpenGL(QWidget *parent) : QOpenGLWidget(parent), pointsColor(255,255,255){
-}
+CanvasOpenGL::CanvasOpenGL(QWidget *parent) : QOpenGLWidget(parent), pointsColor(255,255,255) {}
 
 // ==================================================================================================
 CanvasOpenGL::~CanvasOpenGL() {}
@@ -17,8 +16,8 @@ void CanvasOpenGL::SetPointsColor(QColor color) {
 }
 
 // ==================================================================================================
-void CanvasOpenGL::SetDrawer(PolygonDrawer* drawer) {
-    this->drawer = drawer;
+void CanvasOpenGL::AddDrawer(Drawer* drawer) {
+    this->drawers.push_back(drawer);
 }
 
 // ==================================================================================================
@@ -36,7 +35,7 @@ void CanvasOpenGL::initializeGL() {}
 
 // ==================================================================================================
 void CanvasOpenGL::paintGL() {
-    if (drawer != nullptr)
+    for (auto drawer : drawers)
         drawer->Draw(this, vertices, pointsColor);
 }
 

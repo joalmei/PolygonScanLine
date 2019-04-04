@@ -9,20 +9,20 @@
 
 using namespace std;
 
-#include "polygondrawer.h"
+#include "drawer.h"
 
 class CanvasOpenGL : public QOpenGLWidget {
 public:
     CanvasOpenGL(QWidget *parent);
     ~CanvasOpenGL();
     void SetPointsColor(QColor color);
-    void SetDrawer(PolygonDrawer* drawer);
+    void AddDrawer(Drawer* drawer);
     void ClearScreen();
 
 private:
     vector<QPoint> vertices;
     QColor pointsColor;
-    PolygonDrawer *drawer;
+    vector<Drawer*> drawers;
 
 protected:
     void initializeGL();

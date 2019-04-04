@@ -3,14 +3,16 @@
 
 class CanvasOpenGL;
 #include <vector>
+#include "drawer.h"
 #include "qcolor.h"
 #include "qpoint.h"
 #include "qpainter.h"
 
-class PolygonDrawer
+class PolygonDrawer : public Drawer
 {
 public:
     PolygonDrawer();
+    virtual ~PolygonDrawer();
     void Draw(CanvasOpenGL* canvas, std::vector<QPoint>& vertices, QColor pointsColor);
 
 private:
