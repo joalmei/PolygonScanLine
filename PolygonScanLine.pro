@@ -31,7 +31,8 @@ SOURCES += \
     polygondrawer.cpp \
     drawer.cpp \
     linedrawer.cpp \
-    mousefollower.cpp
+    mousefollower.cpp \
+    hintboxdrawer.cpp
 
 HEADERS += \
         mainwindow.h \
@@ -39,7 +40,8 @@ HEADERS += \
     polygondrawer.h \
     drawer.h \
     linedrawer.h \
-    mousefollower.h
+    mousefollower.h \
+    hintboxdrawer.h
 
 FORMS += \
         mainwindow.ui

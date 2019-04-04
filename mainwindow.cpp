@@ -4,6 +4,7 @@
 
 #include "linedrawer.h"
 #include "mousefollower.h"
+#include "hintboxdrawer.h"
 
 
 // ==================================================================================================
@@ -46,6 +47,10 @@ void MainWindow::initCanvas() {
         mouseFollower->AddPoint(&(drawer->Vertices.back()));
     });
     openGlCanvas->AddDrawer(drawer);
+
+    auto hintText = new HintBoxDrawer();
+    hintText->Text = "Press \"Esc\" or \"Enter\" to quit edit mode";
+    openGlCanvas->AddDrawer(hintText);
 
     /*
     auto line = new LineDrawer();
