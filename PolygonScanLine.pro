@@ -30,14 +30,16 @@ SOURCES += \
     canvasopengl.cpp \
     polygondrawer.cpp \
     drawer.cpp \
-    linedrawer.cpp
+    linedrawer.cpp \
+    mousefollower.cpp
 
 HEADERS += \
         mainwindow.h \
     canvasopengl.h \
     polygondrawer.h \
     drawer.h \
-    linedrawer.h
+    linedrawer.h \
+    mousefollower.h
 
 FORMS += \
         mainwindow.ui

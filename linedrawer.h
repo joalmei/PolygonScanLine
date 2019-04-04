@@ -6,7 +6,7 @@
 class LineDrawer : public Drawer
 {
 public:
-    std::pair<QPoint, QPoint> Points;
+    std::pair<QPoint*, QPoint*> Points;
 
 public:
     virtual ~LineDrawer();

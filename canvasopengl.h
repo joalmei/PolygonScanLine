@@ -13,14 +13,15 @@ using namespace std;
 
 class CanvasOpenGL : public QOpenGLWidget {
 public:
-    vector<function<void(QMouseEvent *event)>> OnMousePressed;
+    vector<function<void(QMouseEvent*)>> OnMousePressed;
+    vector<function<void(QMouseEvent*)>> OnMouseMoved;
 
 public:
-    CanvasOpenGL(QWidget *parent);
+    CanvasOpenGL(QWidget* parent);
     ~CanvasOpenGL();
 
-    void SetPointsColor(QColor color);
-    void AddDrawer(Drawer* drawer);
+    void SetPointsColor(QColor);
+    void AddDrawer(Drawer*);
     void ClearScreen();
 
 private:
@@ -29,10 +30,13 @@ private:
 
 protected:
     void initializeGL();
-    void resizeGL(int w, int h);
+    void resizeGL(int, int);
     void paintGL();
 
-    void mousePressEvent(QMouseEvent *event);
+    void mousePressEvent(QMouseEvent*);
+    void mouseMoveEvent(QMouseEvent*);
+    void mouseDoubleClickEvent(QMouseEvent*);
+    void mouseReleaseEvent(QMouseEvent*);
 };
 
 #endif // CANVASOPENGL_H

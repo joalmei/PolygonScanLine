@@ -17,5 +17,5 @@ void LineDrawer::Draw(CanvasOpenGL* canvas, QColor pointsColor) {
     painter.setPen(myPen);
     painter.setBrush(brush);
 
-    painter.drawLine(Points.first, Points.second);
+    painter.drawLine(*Points.first, *Points.second);
 }

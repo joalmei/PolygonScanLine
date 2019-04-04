@@ -4,7 +4,9 @@
 // ==================================================================================================
 // PUBLIC MEMBERS
 // ==================================================================================================
-CanvasOpenGL::CanvasOpenGL(QWidget *parent) : QOpenGLWidget(parent), pointsColor(255,255,255) {}
+CanvasOpenGL::CanvasOpenGL(QWidget *parent) : QOpenGLWidget(parent), pointsColor(255,255,255) {
+    setMouseTracking(true);
+}
 
 // ==================================================================================================
 CanvasOpenGL::~CanvasOpenGL() {
@@ -50,6 +52,22 @@ void CanvasOpenGL::resizeGL(int w, int h) {}
 void CanvasOpenGL::mousePressEvent(QMouseEvent *event) {
     for(auto action : OnMousePressed)
         action(event);
-
     this->update();
+}
+
+// ==================================================================================================
+void CanvasOpenGL::mouseMoveEvent(QMouseEvent *event) {
+    for(auto action : OnMouseMoved)
+        action(event);
+    this->update();
+}
+
+// ==================================================================================================
+void CanvasOpenGL::mouseDoubleClickEvent(QMouseEvent*) {
+
+}
+
+// ==================================================================================================
+void CanvasOpenGL::mouseReleaseEvent(QMouseEvent*) {
+
 }

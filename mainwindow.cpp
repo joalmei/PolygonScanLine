@@ -1,7 +1,9 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
 #include "polygondrawer.h"
+
 #include "linedrawer.h"
+#include "mousefollower.h"
 
 
 // ==================================================================================================
@@ -38,10 +40,12 @@ void MainWindow::initCanvas() {
     });
     openGlCanvas->AddDrawer(drawer);
 
-    // line drawer test
-    // auto line = new LineDrawer();
-    // line->Points = make_pair(QPoint(0,0), QPoint(openGlCanvas->width(),openGlCanvas->height()));
-    // openGlCanvas->AddDrawer(line);
+    auto line = new LineDrawer();
+    auto startPoint = new QPoint(0, 0);
+    auto finalPoint = new QPoint(openGlCanvas->width(),openGlCanvas->height());
+    auto follower = MouseFollower(finalPoint, openGlCanvas);
+    line->Points = make_pair(startPoint, finalPoint);
+    openGlCanvas->AddDrawer(line);
 }
 
 
