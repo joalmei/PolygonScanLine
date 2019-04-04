@@ -10,11 +10,11 @@
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::MainWindow),
-    color(255, 255, 255){
+    color(255, 255, 255) {
 
     ui->setupUi(this);
 
-    setWindowTitle(tr("Teste QT OK"));
+    setWindowTitle(tr("Mid Point Algorithm Tester"));
 
     openGlCanvas = ui->centralWidget->findChild<CanvasOpenGL*>();
     initCanvas();
