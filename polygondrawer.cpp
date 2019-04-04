@@ -11,7 +11,7 @@ PolygonDrawer::PolygonDrawer() {}
 PolygonDrawer::~PolygonDrawer() {}
 
 // ==================================================================================================
-void PolygonDrawer::Draw(CanvasOpenGL*canvas, std::vector<QPoint>& vertices, QColor pointsColor) {
+void PolygonDrawer::Draw(CanvasOpenGL*canvas, QColor pointsColor) {
     //create a QPainter and pass a pointer to the device.
     //A paint device can be a QWidget, a QPixmap or a QImage
     QPainter painter(canvas);
@@ -26,11 +26,10 @@ void PolygonDrawer::Draw(CanvasOpenGL*canvas, std::vector<QPoint>& vertices, QCo
     painter.setBrush(brush);
 
     // qt built-in method that implements the MidPointAlgorithm:
-    painter.drawPolygon(vertices.data(), vertices.size(), Qt::OddEvenFill);
+    painter.drawPolygon(Vertices.data(), Vertices.size(), Qt::OddEvenFill);
     // our method to implement:
-    midPointMethod(vertices, painter);
+    midPointMethod(Vertices, painter);
 }
-
 
 // ==================================================================================================
 // PRIVATE MEMBERS

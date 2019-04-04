@@ -29,13 +29,15 @@ SOURCES += \
         mainwindow.cpp \
     canvasopengl.cpp \
     polygondrawer.cpp \
-    drawer.cpp
+    drawer.cpp \
+    linedrawer.cpp
 
 HEADERS += \
         mainwindow.h \
     canvasopengl.h \
     polygondrawer.h \
-    drawer.h
+    drawer.h \
+    linedrawer.h
 
 FORMS += \
         mainwindow.ui

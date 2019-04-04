@@ -13,14 +13,17 @@ using namespace std;
 
 class CanvasOpenGL : public QOpenGLWidget {
 public:
+    vector<function<void(QMouseEvent *event)>> OnMousePressed;
+
+public:
     CanvasOpenGL(QWidget *parent);
     ~CanvasOpenGL();
+
     void SetPointsColor(QColor color);
     void AddDrawer(Drawer* drawer);
     void ClearScreen();
 
 private:
-    vector<QPoint> vertices;
     QColor pointsColor;
     vector<Drawer*> drawers;
 

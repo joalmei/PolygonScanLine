@@ -11,9 +11,12 @@ class CanvasOpenGL;
 class PolygonDrawer : public Drawer
 {
 public:
+    std::vector<QPoint> Vertices;
+
+public:
     PolygonDrawer();
     virtual ~PolygonDrawer();
-    void Draw(CanvasOpenGL* canvas, std::vector<QPoint>& vertices, QColor pointsColor);
+    void Draw(CanvasOpenGL* canvas, QColor pointsColor);
 
 private:
     void midPointMethod(std::vector<QPoint>& vertices, QPainter& painter);
