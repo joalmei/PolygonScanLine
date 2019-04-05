@@ -12,6 +12,7 @@ public:
     VertexHolderDrawer(CanvasOpenGL*, QPoint*);
     virtual ~VertexHolderDrawer();
     virtual void Draw(QColor);
+    QPoint* Vertex() const;
 };
 
 #endif // VERTEXHOLDERDRAWER_H

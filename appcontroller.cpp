@@ -17,23 +17,29 @@ AppController::AppController(MainWindow* window) {
 }
 
 // ==================================================================================================
+AppController::~AppController() {
+    clearAllData();
+}
+
+// ==================================================================================================
 // PRIVATE MEMBERS
 // ==================================================================================================
 void AppController::initCanvas() {
     // creates polygon drawer and subcribes to on mouse click event in canvas
+    state = eAppState::DRAWING;
+
     polygonDrawer = new PolygonDrawer(canvas);
-    polygonDrawer->Vertices.push_back(new QPoint(0, 0));
-    mouseFollower->AddPoint(polygonDrawer->Vertices.back());
+    canvas->AddDrawer(polygonDrawer);
+
+    auto point = createNewPoint(QPoint());
+    mouseFollower->AddPoint(point);
 
     canvas->OnMousePressed.push_back([this](QMouseEvent* e) {
         if (state != eAppState::DRAWING) { return; }
 
-        mouseFollower->RemovePoint(polygonDrawer->Vertices.back());
-        auto vertexHolder = new VertexHolderDrawer(canvas, polygonDrawer->Vertices.back());
-        canvas->AddDrawer(vertexHolder);
-
-        polygonDrawer->Vertices.push_back(new QPoint(e->pos()));
-        mouseFollower->AddPoint(polygonDrawer->Vertices.back());
+        mouseFollower->RemovePoint(vertices.back());
+        auto point = createNewPoint(e->pos());
+        mouseFollower->AddPoint(point);
 
         if (polygonDrawer->Vertices.size() == 3) {
             hintBox = new HintBoxDrawer(canvas);
@@ -41,9 +47,31 @@ void AppController::initCanvas() {
             canvas->AddDrawer(hintBox);
         }
     });
-    canvas->AddDrawer(polygonDrawer);
+}
 
-    state = eAppState::DRAWING;
+// ==================================================================================================
+QPoint* AppController::createNewPoint(QPoint pos) {
+    auto point  = new QPoint(pos);
+    polygonDrawer->Vertices.push_back(point);
+
+    auto vertex = new VertexHolderDrawer(canvas, point);
+    holders.push_back(vertex);
+    vertices.push_back(point);
+    canvas->AddDrawer(vertex);
+
+    return point;
+}
+
+// ==================================================================================================
+void AppController::clearAllData() {
+    for (auto v : vertices)
+        delete v;
+    vertices.clear();
+    for (auto h : holders)
+        delete h;
+    holders.clear();
+    delete polygonDrawer;
+    delete hintBox;
 }
 
 // ==================================================================================================
@@ -59,7 +87,10 @@ void AppController::onKeyReleased(int key) {
 
 // ==================================================================================================
 void AppController::onClearPressed() {
+    mouseFollower->RemovePoint(vertices.back());
+    clearAllData();
     canvas->ClearScreen();
-    mouseFollower->RemovePoint(polygonDrawer->Vertices.back());
+
+    // reset canvas
     initCanvas();
 }

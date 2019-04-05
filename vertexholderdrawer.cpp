@@ -34,3 +34,7 @@ void VertexHolderDrawer::Draw(QColor color) {
 
     return polygonDrawer->Draw(color);
 }
+
+QPoint* VertexHolderDrawer::Vertex() const {
+    return vertex;
+}

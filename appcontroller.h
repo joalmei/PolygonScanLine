@@ -2,6 +2,7 @@
 #define APPCONTROLLER_H
 
 #include "mainwindow.h"
+#include "vertexholderdrawer.h"
 
 class AppController : public QObject {
     Q_OBJECT
@@ -17,15 +18,25 @@ private:
     MainWindow* window;
     CanvasOpenGL* canvas;
 
-    MouseFollower* mouseFollower;
-    PolygonDrawer* polygonDrawer;
+    // UI
     HintBoxDrawer* hintBox;
+
+    // EDIT MODE
+    MouseFollower* mouseFollower;
+
+    // POLYGON DATA
+    PolygonDrawer* polygonDrawer;
+    std::vector<VertexHolderDrawer*> holders;
+    std::vector<QPoint*> vertices;
 
 public:
     AppController(MainWindow*);
+    ~AppController();
 
 private:
     void initCanvas();
+    QPoint* createNewPoint(QPoint);
+    void clearAllData();
 
 private slots:
     void onKeyReleased(int key);

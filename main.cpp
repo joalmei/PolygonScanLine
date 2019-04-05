@@ -6,10 +6,10 @@
 // ==================================================================================================
 int main(int argc, char *argv[]) {
     QApplication a(argc, argv);
-    MainWindow *w = new MainWindow();
-    w->show();
+    MainWindow w;
+    w.show();
 
-    AppController app(w);
+    AppController app(&w);
 
     return a.exec();
 }

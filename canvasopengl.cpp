@@ -10,8 +10,6 @@ CanvasOpenGL::CanvasOpenGL(QWidget *parent) : QOpenGLWidget(parent), pointsColor
 
 // ==================================================================================================
 CanvasOpenGL::~CanvasOpenGL() {
-    for(auto drawer : drawers)
-        delete drawer;
 }
 
 // ==================================================================================================
@@ -27,8 +25,6 @@ void CanvasOpenGL::AddDrawer(Drawer* drawer) {
 
 // ==================================================================================================
 void CanvasOpenGL::ClearScreen() {
-    for(auto drawer : drawers)
-        delete drawer;
     drawers.clear();
     OnMousePressed.clear();
     this->update();
