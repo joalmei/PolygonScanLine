@@ -3,12 +3,13 @@
 
 // ==================================================================================================
 #define BOX_HEIGHT 20
+#define ANIM_DURATION 800
 
 // ==================================================================================================
 HintBoxDrawer::HintBoxDrawer(CanvasOpenGL* canvas) : Drawer(canvas) {
     animation = new QPropertyAnimation(this, "rect");
     animation->setEasingCurve(QEasingCurve::OutQuad);
-    animation->setDuration(800);
+    animation->setDuration(ANIM_DURATION);
     animation->setStartValue(QRect(0, 0, canvas->width(), 0));
     animation->setEndValue(QRect(0, 0, canvas->width(), BOX_HEIGHT));
 
