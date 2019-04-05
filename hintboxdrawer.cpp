@@ -6,17 +6,19 @@
 
 // ==================================================================================================
 HintBoxDrawer::HintBoxDrawer(CanvasOpenGL* canvas) : Drawer(canvas) {
-    QPropertyAnimation *animation = new QPropertyAnimation(this, "rect");
+    animation = new QPropertyAnimation(this, "rect");
     animation->setEasingCurve(QEasingCurve::OutQuad);
     animation->setDuration(800);
     animation->setStartValue(QRect(0, 0, canvas->width(), 0));
     animation->setEndValue(QRect(0, 0, canvas->width(), BOX_HEIGHT));
 
-    animation->start();
+    animation->start(QAbstractAnimation::DeleteWhenStopped);
 }
 
 // ==================================================================================================
-HintBoxDrawer::~HintBoxDrawer() { }
+HintBoxDrawer::~HintBoxDrawer() {
+    animation->stop();
+}
 
 // ==================================================================================================
 void HintBoxDrawer::Draw(QColor pointsColor) {

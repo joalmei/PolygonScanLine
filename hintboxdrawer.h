@@ -4,6 +4,7 @@
 #include "drawer.h"
 #include <QObject>
 #include <QRect>
+#include <QPropertyAnimation>
 
 class HintBoxDrawer: public Drawer {
     Q_OBJECT
@@ -14,6 +15,7 @@ public:
 
 private:
     QRect rect;
+    QPropertyAnimation* animation;
 
 public:
     HintBoxDrawer(CanvasOpenGL*);
