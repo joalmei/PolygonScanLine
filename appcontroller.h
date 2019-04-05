@@ -34,9 +34,17 @@ public:
     ~AppController();
 
 private:
-    void initCanvas();
     QPoint* createNewPoint(QPoint);
     void clearAllData();
+    void subscribeMouseActions();
+
+    void beginDrawing();
+    void beginWaiting();
+    void beginEditing();
+
+    void endDrawing();
+    void endWaiting();
+    void endEditing();
 
 private slots:
     void onKeyReleased(int key);

@@ -26,7 +26,6 @@ void CanvasOpenGL::AddDrawer(Drawer* drawer) {
 // ==================================================================================================
 void CanvasOpenGL::ClearScreen() {
     drawers.clear();
-    OnMousePressed.clear();
     this->update();
 }
 
