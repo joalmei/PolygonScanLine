@@ -19,30 +19,27 @@ namespace Ui {
 class MainWindow : public QMainWindow {
     Q_OBJECT
 
+// ATRIBUTES
 private:
-    enum eAppState {
-        DRAWING,
-        WAITING,
-        EDITING,
-    };
-
-    eAppState state = eAppState::WAITING;
-
     Ui::MainWindow *ui;
     CanvasOpenGL* openGlCanvas;
     QColor color;
-    MouseFollower* mouseFollower;
 
-    PolygonDrawer* polygonDrawer;
-    HintBoxDrawer* hintBox;
 
+// METHODS
 public:
     explicit MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
+    CanvasOpenGL* Canvas() const;
 
 private:
-    void initCanvas();
-    void keyPressEvent(QKeyEvent*);
+    void keyReleaseEvent(QKeyEvent*);
+
+
+// SIGNALS / SLOTS
+signals:
+    void keyReleased(int);
+    void clearPressed();
 
 private slots:
     void on_ClearButton_clicked();

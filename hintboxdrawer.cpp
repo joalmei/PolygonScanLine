@@ -13,7 +13,7 @@ HintBoxDrawer::HintBoxDrawer(CanvasOpenGL* canvas) : Drawer(canvas) {
 
 // ==================================================================================================
 HintBoxDrawer::~HintBoxDrawer() {
-    if (animation != nullptr) { animation->stop(); }
+     if (animation != nullptr) { animation->stop(); }
 }
 
 // ==================================================================================================
