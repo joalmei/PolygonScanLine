@@ -7,18 +7,13 @@
 
 // ==================================================================================================
 HintBoxDrawer::HintBoxDrawer(CanvasOpenGL* canvas) : Drawer(canvas) {
-    animation = new QPropertyAnimation(this, "rect");
-    animation->setEasingCurve(QEasingCurve::OutQuad);
-    animation->setDuration(ANIM_DURATION);
-    animation->setStartValue(QRect(0, 0, canvas->width(), 0));
-    animation->setEndValue(QRect(0, 0, canvas->width(), BOX_HEIGHT));
-
-    animation->start(QAbstractAnimation::DeleteWhenStopped);
+    animation = nullptr;
+    Show();
 }
 
 // ==================================================================================================
 HintBoxDrawer::~HintBoxDrawer() {
-    animation->stop();
+    if (animation != nullptr) { animation->stop(); }
 }
 
 // ==================================================================================================
@@ -47,4 +42,30 @@ QRect HintBoxDrawer::Rect() const {
 void HintBoxDrawer::setRect(const QRect &rect) {
     this->rect = rect;
     canvas->update();
+}
+
+// ==================================================================================================
+void HintBoxDrawer::Show() {
+    if (animation != nullptr) { animation->stop(); }
+
+    animation = new QPropertyAnimation(this, "rect");
+    animation->setEasingCurve(QEasingCurve::OutQuad);
+    animation->setDuration(ANIM_DURATION);
+    animation->setStartValue(QRect(0, 0, canvas->width(), 0));
+    animation->setEndValue(QRect(0, 0, canvas->width(), BOX_HEIGHT));
+
+    animation->start(QAbstractAnimation::DeleteWhenStopped);
+}
+
+// ==================================================================================================
+void HintBoxDrawer::Dismiss() {
+    if (animation != nullptr) { animation->stop(); }
+
+    animation = new QPropertyAnimation(this, "rect");
+    animation->setEasingCurve(QEasingCurve::InQuad);
+    animation->setDuration(ANIM_DURATION);
+    animation->setStartValue(QRect(0, 0, canvas->width(), BOX_HEIGHT));
+    animation->setEndValue(QRect(0, 0, canvas->width(), 0));
+
+    animation->start(QAbstractAnimation::DeleteWhenStopped);
 }

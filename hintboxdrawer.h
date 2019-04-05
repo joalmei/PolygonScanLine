@@ -5,6 +5,7 @@
 #include <QObject>
 #include <QRect>
 #include <QPropertyAnimation>
+#include <QPointer>
 
 class HintBoxDrawer: public Drawer {
     Q_OBJECT
@@ -15,15 +16,22 @@ public:
 
 private:
     QRect rect;
-    QPropertyAnimation* animation;
+    QPointer<QPropertyAnimation> animation; // a smart pointer is used because an animation autodestructs
+                                            // when finished (only way to check if object was destroyed)
 
 public:
     HintBoxDrawer(CanvasOpenGL*);
     virtual ~HintBoxDrawer();
+
     virtual void Draw(QColor pointsColor);
 
+    // ACCESSORS
     QRect Rect() const;
     void setRect(const QRect &rect);
+
+    // ANIMATION METHODS
+    void Show();
+    void Dismiss();
 };
 
 #endif // HINTBOXDRAWER_H
