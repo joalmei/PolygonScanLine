@@ -32,7 +32,6 @@ CanvasOpenGL* MainWindow::Canvas() const {
     return openGlCanvas;
 }
 
-
 // ==================================================================================================
 // PRIVATE MEMBERS
 // ==================================================================================================
@@ -42,7 +41,7 @@ void MainWindow::keyReleaseEvent(QKeyEvent* e) {
 
 
 // ==================================================================================================
-// PRIVATE MEMBERS (slots)
+// PRIVATE MEMBERS (SLOTS)
 // ==================================================================================================
 void MainWindow::on_ClearButton_clicked() {
     // OBS: Qt defines on_<Button>_<Signal> as default callbacks for any UI element in the same object

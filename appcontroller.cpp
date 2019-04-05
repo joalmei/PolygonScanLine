@@ -1,5 +1,8 @@
 #include "appcontroller.h"
 
+// ==================================================================================================
+// PUBLIC MEMBERS
+// ==================================================================================================
 AppController::AppController(MainWindow* window) {
     this->window = window;
     canvas = window->Canvas();
@@ -11,6 +14,9 @@ AppController::AppController(MainWindow* window) {
     connect(window, &MainWindow::clearPressed, this, &AppController::onClearPressed);
 }
 
+// ==================================================================================================
+// PRIVATE MEMBERS
+// ==================================================================================================
 void AppController::initCanvas() {
     // creates polygon drawer and subcribes to on mouse click event in canvas
     polygonDrawer = new PolygonDrawer(canvas);
@@ -35,6 +41,9 @@ void AppController::initCanvas() {
     state = eAppState::DRAWING;
 }
 
+// ==================================================================================================
+// PUBLIC MEMBERS (SLOTS)
+// ==================================================================================================
 void AppController::onKeyReleased(int key) {
     if ((key == Qt::Key_Escape) || (key == Qt::Key_Enter) || (key == Qt::Key_Return)) {
         state = eAppState::WAITING;
@@ -43,6 +52,7 @@ void AppController::onKeyReleased(int key) {
     }
 }
 
+// ==================================================================================================
 void AppController::onClearPressed() {
     canvas->ClearScreen();
     mouseFollower->RemovePoint(&(polygonDrawer->Vertices.back()));
