@@ -36,3 +36,7 @@ QPoint* VertexHolderDrawer::Vertex() const {
 void VertexHolderDrawer::setIsSelected(const bool isSelected) {
     this->isSelected = isSelected;
 }
+
+bool VertexHolderDrawer::IsSelected() const {
+    return isSelected;
+}

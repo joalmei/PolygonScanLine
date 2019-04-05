@@ -16,6 +16,7 @@ public:
     QPoint* Vertex() const;
 
     void setIsSelected(const bool isSelected);
+    bool IsSelected() const;
 };
 
 #endif // VERTEXHOLDERDRAWER_H

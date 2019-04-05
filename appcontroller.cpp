@@ -83,6 +83,7 @@ void AppController::onKeyReleased(int key) {
         mouseFollower->RemovePoint(polygonDrawer->Vertices.back());
         hintBox->Dismiss();
 
+        // VERTEX HIGHLIGHT
         canvas->OnMouseMoved.push_back([this](QMouseEvent* e) {
             int closest = -1;
             float minDist = 100000000;
@@ -99,6 +100,26 @@ void AppController::onKeyReleased(int key) {
 
             for (int i = 0; i < holders.size(); i++)
                 holders[i]->setIsSelected(i == closest);
+        });
+
+        // VERTEX DRAG
+        canvas->OnMousePressed.push_back([this](QMouseEvent* e) {
+           if (state != eAppState::WAITING) { return; }
+            for (auto h : holders)
+               if (h->IsSelected()) {
+                   mouseFollower->AddPoint(h->Vertex());
+                   state = eAppState::EDITING;
+               }
+        });
+
+        // VERTEX DROP
+        canvas->OnMouseReleased.push_back([this](QMouseEvent* e) {
+            if (state != eAppState::EDITING) { return; }
+             for (auto h : holders)
+                if (h->IsSelected()) {
+                    mouseFollower->RemovePoint(h->Vertex());
+                    state = eAppState::WAITING;
+                }
         });
     }
 }

@@ -64,6 +64,8 @@ void CanvasOpenGL::mouseDoubleClickEvent(QMouseEvent*) {
 }
 
 // ==================================================================================================
-void CanvasOpenGL::mouseReleaseEvent(QMouseEvent*) {
-
+void CanvasOpenGL::mouseReleaseEvent(QMouseEvent *event) {
+    for(auto action : OnMouseReleased)
+        action(event);
+    this->update();
 }

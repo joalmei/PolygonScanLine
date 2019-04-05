@@ -14,6 +14,7 @@ using namespace std;
 class CanvasOpenGL : public QOpenGLWidget {
 public:
     vector<function<void(QMouseEvent*)>> OnMousePressed;
+    vector<function<void(QMouseEvent*)>> OnMouseReleased;
     vector<function<void(QMouseEvent*)>> OnMouseMoved;
 
 public:
