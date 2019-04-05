@@ -37,7 +37,7 @@ MainWindow::~MainWindow() {
 // ==================================================================================================
 void MainWindow::initCanvas() {
     // creates polygon drawer and subcribes to on mouse click event in canvas
-    auto drawer = new PolygonDrawer();
+    auto drawer = new PolygonDrawer(openGlCanvas);
     drawer->Vertices.push_back(QPoint(0, 0));
     mouseFollower->AddPoint(&(drawer->Vertices.back()));
 
@@ -45,15 +45,17 @@ void MainWindow::initCanvas() {
         mouseFollower->RemovePoint(&(drawer->Vertices.back()));
         drawer->Vertices.push_back(e->pos());
         mouseFollower->AddPoint(&(drawer->Vertices.back()));
+
+        if (drawer->Vertices.size() == 3) {
+            auto hintText = new HintBoxDrawer(openGlCanvas);
+            hintText->Text = "Press \"Esc\" or \"Enter\" to quit edit mode";
+            openGlCanvas->AddDrawer(hintText);
+        }
     });
     openGlCanvas->AddDrawer(drawer);
 
-    auto hintText = new HintBoxDrawer();
-    hintText->Text = "Press \"Esc\" or \"Enter\" to quit edit mode";
-    openGlCanvas->AddDrawer(hintText);
-
     /*
-    auto line = new LineDrawer();
+    auto line = new LineDrawer(openGlCanvas);
     auto startPoint = new QPoint(0, 0);
     auto finalPoint = new QPoint(openGlCanvas->width(),openGlCanvas->height());
     auto follower = MouseFollower(finalPoint, openGlCanvas);

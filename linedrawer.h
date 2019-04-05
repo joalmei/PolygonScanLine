@@ -9,8 +9,9 @@ public:
     std::pair<QPoint*, QPoint*> Points;
 
 public:
+    LineDrawer(CanvasOpenGL*);
     virtual ~LineDrawer();
-    virtual void Draw(CanvasOpenGL* canvas, QColor pointsColor);
+    virtual void Draw(QColor pointsColor);
 };
 
 #endif // LINEDRAWER_H

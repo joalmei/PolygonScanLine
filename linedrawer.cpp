@@ -1,9 +1,12 @@
 #include "linedrawer.h"
 #include "canvasopengl.h"
 
+
+LineDrawer::LineDrawer(CanvasOpenGL* canvas) : Drawer(canvas) { }
+
 LineDrawer::~LineDrawer() { }
 
-void LineDrawer::Draw(CanvasOpenGL* canvas, QColor pointsColor) {
+void LineDrawer::Draw(QColor pointsColor) {
     QPainter painter(canvas);
 
     QPen myPen(1); // 1 px

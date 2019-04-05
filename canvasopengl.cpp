@@ -42,7 +42,7 @@ void CanvasOpenGL::initializeGL() {}
 // ==================================================================================================
 void CanvasOpenGL::paintGL() {
     for (auto drawer : drawers)
-        drawer->Draw(this, pointsColor);
+        drawer->Draw(pointsColor);
 }
 
 // ==================================================================================================

@@ -14,9 +14,9 @@ public:
     std::vector<QPoint> Vertices;
 
 public:
-    PolygonDrawer();
+    PolygonDrawer(CanvasOpenGL* canvas);
     virtual ~PolygonDrawer();
-    void Draw(CanvasOpenGL* canvas, QColor pointsColor);
+    void Draw(QColor pointsColor);
 
 private:
     void midPointMethod(std::vector<QPoint>& vertices, QPainter& painter);

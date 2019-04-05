@@ -5,13 +5,13 @@
 // ==================================================================================================
 // PUBLIC MEMBERS
 // ==================================================================================================
-PolygonDrawer::PolygonDrawer() {}
+PolygonDrawer::PolygonDrawer(CanvasOpenGL* canvas) : Drawer(canvas) { }
 
 // ==================================================================================================
 PolygonDrawer::~PolygonDrawer() {}
 
 // ==================================================================================================
-void PolygonDrawer::Draw(CanvasOpenGL*canvas, QColor pointsColor) {
+void PolygonDrawer::Draw(QColor pointsColor) {
     //create a QPainter and pass a pointer to the device.
     //A paint device can be a QWidget, a QPixmap or a QImage
     QPainter painter(canvas);
