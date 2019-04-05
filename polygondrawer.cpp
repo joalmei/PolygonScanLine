@@ -23,7 +23,11 @@ void PolygonDrawer::Draw(QColor pointsColor) {
     painter.setBrush(brush);
 
     // qt built-in method that implements the MidPointAlgorithm:
-    painter.drawPolygon(Vertices.data(), Vertices.size(), Qt::OddEvenFill);
+    vector<QPoint> points;
+    points.reserve(Vertices.size());
+    for(auto vertex : Vertices)
+        points.push_back(*vertex);
+    painter.drawPolygon(points.data(), points.size(), Qt::OddEvenFill);
     // our method to implement:
     midPointMethod(Vertices, painter);
 }
@@ -31,10 +35,11 @@ void PolygonDrawer::Draw(QColor pointsColor) {
 // ==================================================================================================
 // PRIVATE MEMBERS
 // ==================================================================================================
-void PolygonDrawer::midPointMethod(std::vector<QPoint>& vertices, QPainter& painter) {
-    for (std::vector<QPoint>::iterator i = vertices.begin(); i != vertices.end(); i++) {
-        painter.drawPoint(*i);
+void PolygonDrawer::midPointMethod(std::vector<QPoint*>& vertices, QPainter& painter) {
+    for (auto i = vertices.begin(); i != vertices.end(); i++) {
+        painter.drawPoint(**i);
     }
+
     /* EXAMPLE OF A WHITE SQUARE WITH SIZE 100 X 100
     for (int i = 100; i <= 200; i++) {
         for(int j = 100; j <= 200; j++) {

@@ -33,7 +33,8 @@ SOURCES += \
     linedrawer.cpp \
     mousefollower.cpp \
     hintboxdrawer.cpp \
-    appcontroller.cpp
+    appcontroller.cpp \
+    vertexholderdrawer.cpp
 
 HEADERS += \
         mainwindow.h \
@@ -43,7 +44,8 @@ HEADERS += \
     linedrawer.h \
     mousefollower.h \
     hintboxdrawer.h \
-    appcontroller.h
+    appcontroller.h \
+    vertexholderdrawer.h
 
 FORMS += \
         mainwindow.ui

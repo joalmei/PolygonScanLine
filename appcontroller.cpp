@@ -1,4 +1,6 @@
 #include "appcontroller.h"
+#include "vertexholderdrawer.h"
+
 
 // ==================================================================================================
 // PUBLIC MEMBERS
@@ -20,15 +22,18 @@ AppController::AppController(MainWindow* window) {
 void AppController::initCanvas() {
     // creates polygon drawer and subcribes to on mouse click event in canvas
     polygonDrawer = new PolygonDrawer(canvas);
-    polygonDrawer->Vertices.push_back(QPoint(0, 0));
-    mouseFollower->AddPoint(&(polygonDrawer->Vertices.back()));
+    polygonDrawer->Vertices.push_back(new QPoint(0, 0));
+    mouseFollower->AddPoint(polygonDrawer->Vertices.back());
 
     canvas->OnMousePressed.push_back([this](QMouseEvent* e) {
         if (state != eAppState::DRAWING) { return; }
 
-        mouseFollower->RemovePoint(&(polygonDrawer->Vertices.back()));
-        polygonDrawer->Vertices.push_back(e->pos());
-        mouseFollower->AddPoint(&(polygonDrawer->Vertices.back()));
+        mouseFollower->RemovePoint(polygonDrawer->Vertices.back());
+        auto vertexHolder = new VertexHolderDrawer(canvas, polygonDrawer->Vertices.back());
+        canvas->AddDrawer(vertexHolder);
+
+        polygonDrawer->Vertices.push_back(new QPoint(e->pos()));
+        mouseFollower->AddPoint(polygonDrawer->Vertices.back());
 
         if (polygonDrawer->Vertices.size() == 3) {
             hintBox = new HintBoxDrawer(canvas);
@@ -47,7 +52,7 @@ void AppController::initCanvas() {
 void AppController::onKeyReleased(int key) {
     if ((key == Qt::Key_Escape) || (key == Qt::Key_Enter) || (key == Qt::Key_Return)) {
         state = eAppState::WAITING;
-        mouseFollower->RemovePoint(&(polygonDrawer->Vertices.back()));
+        mouseFollower->RemovePoint(polygonDrawer->Vertices.back());
         hintBox->Dismiss();
     }
 }
@@ -55,6 +60,6 @@ void AppController::onKeyReleased(int key) {
 // ==================================================================================================
 void AppController::onClearPressed() {
     canvas->ClearScreen();
-    mouseFollower->RemovePoint(&(polygonDrawer->Vertices.back()));
+    mouseFollower->RemovePoint(polygonDrawer->Vertices.back());
     initCanvas();
 }
