@@ -6,13 +6,16 @@
 class VertexHolderDrawer : public Drawer
 {
 private:
-    PolygonDrawer* polygonDrawer;
     QPoint* vertex;
+    bool isSelected = false;
 public:
     VertexHolderDrawer(CanvasOpenGL*, QPoint*);
     virtual ~VertexHolderDrawer();
     virtual void Draw(QColor);
+
     QPoint* Vertex() const;
+
+    void setIsSelected(const bool isSelected);
 };
 
 #endif // VERTEXHOLDERDRAWER_H

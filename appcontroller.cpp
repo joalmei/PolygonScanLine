@@ -82,6 +82,24 @@ void AppController::onKeyReleased(int key) {
         state = eAppState::WAITING;
         mouseFollower->RemovePoint(polygonDrawer->Vertices.back());
         hintBox->Dismiss();
+
+        canvas->OnMouseMoved.push_back([this](QMouseEvent* e) {
+            int closest = -1;
+            float minDist = 100000000;
+
+            for (int i = 0; i < vertices.size(); i++) {
+                auto dist = QVector2D(*vertices[i] - e->pos()).lengthSquared();
+                if (dist < minDist) {
+                    closest = i;
+                    minDist = dist;
+                }
+            }
+
+            if (minDist > 500) { closest = -1; }
+
+            for (int i = 0; i < holders.size(); i++)
+                holders[i]->setIsSelected(i == closest);
+        });
     }
 }
 
