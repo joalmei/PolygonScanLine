@@ -19,7 +19,7 @@ public:
     void Draw(QColor pointsColor);
 
 private:
-    void midPointMethod(std::vector<QPoint*>& vertices, QPainter& painter);
+    void oddEvenFillMethod(std::vector<QPoint*>& vertices, QPainter& painter);
 };
 
 #endif // POLYGONDRAWER_H

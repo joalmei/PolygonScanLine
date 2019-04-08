@@ -29,13 +29,13 @@ void PolygonDrawer::Draw(QColor pointsColor) {
         points.push_back(*vertex);
     painter.drawPolygon(points.data(), points.size(), Qt::OddEvenFill);
     // our method to implement:
-    midPointMethod(Vertices, painter);
+    oddEvenFillMethod(Vertices, painter);
 }
 
 // ==================================================================================================
 // PRIVATE MEMBERS
 // ==================================================================================================
-void PolygonDrawer::midPointMethod(std::vector<QPoint*>& vertices, QPainter& painter) {
+void PolygonDrawer::oddEvenFillMethod(std::vector<QPoint*>& vertices, QPainter& painter) {
     for (auto i = vertices.begin(); i != vertices.end(); i++) {
         painter.drawPoint(**i);
     }
