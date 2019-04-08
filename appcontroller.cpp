@@ -7,8 +7,7 @@
 // ==================================================================================================
 AppController::AppController(MainWindow* window) {
     this->window = window;
-    canvas = window->Canvas();
-    mouseFollower = new MouseFollower(canvas);
+    mouseFollower = new MouseFollower(window->Canvas());
 
     beginDrawing();
     subscribeMouseActions();
@@ -29,10 +28,10 @@ QPoint* AppController::createNewPoint(QPoint pos) {
     auto point  = new QPoint(pos);
     polygonDrawer->Vertices.push_back(point);
 
-    auto vertex = new VertexHolderDrawer(canvas, point);
+    auto vertex = new VertexHolderDrawer(window->Canvas(), point);
     holders.push_back(vertex);
     vertices.push_back(point);
-    canvas->AddDrawer(vertex);
+    window->Canvas()->AddDrawer(vertex);
 
     return point;
 }
@@ -64,7 +63,7 @@ void AppController::onKeyReleased(int key) {
 void AppController::onClearPressed() {
     mouseFollower->RemovePoint(vertices.back());
     clearAllData();
-    canvas->ClearScreen();
+    window->Canvas()->ClearScreen();
 
     // reset canvas
     beginDrawing();
@@ -73,7 +72,7 @@ void AppController::onClearPressed() {
 // ==================================================================================================
 void AppController::subscribeMouseActions() {
     // DRAWING BEHAVIOUR
-    canvas->OnMousePressed.push_back([this](QMouseEvent* e) {
+    window->Canvas()->OnMousePressed.push_back([this](QMouseEvent* e) {
         if (state != eAppState::DRAWING) { return; }
 
         mouseFollower->RemovePoint(vertices.back());
@@ -81,14 +80,14 @@ void AppController::subscribeMouseActions() {
         mouseFollower->AddPoint(point);
 
         if (polygonDrawer->Vertices.size() == 3) {
-            hintBox = new HintBoxDrawer(canvas);
+            hintBox = new HintBoxDrawer(window->Canvas());
             hintBox->Text = "Press \"Esc\" or \"Enter\" to quit edit mode";
-            canvas->AddDrawer(hintBox);
+            window->Canvas()->AddDrawer(hintBox);
         }
     });
 
     // START VERTEX HIGHLIGHT
-    canvas->OnMouseMoved.push_back([this](QMouseEvent* e) {
+    window->Canvas()->OnMouseMoved.push_back([this](QMouseEvent* e) {
         if (state != eAppState::WAITING) { return; }
 
         int closest = -1;
@@ -109,7 +108,7 @@ void AppController::subscribeMouseActions() {
     });
 
     // SETUP WAITING TRANSITION
-    canvas->OnMousePressed.push_back([this](QMouseEvent* e) {
+    window->Canvas()->OnMousePressed.push_back([this](QMouseEvent* e) {
        if (state != eAppState::WAITING) { return; }
 
        for (auto h : holders)
@@ -121,7 +120,7 @@ void AppController::subscribeMouseActions() {
     });
 
     // SETUP EDITING TRANSITION
-    canvas->OnMouseReleased.push_back([this](QMouseEvent* e) {
+    window->Canvas()->OnMouseReleased.push_back([this](QMouseEvent* e) {
         if (state != eAppState::EDITING) { return; }
         endEditing();
         beginWaiting();
@@ -135,8 +134,8 @@ void AppController::beginDrawing() {
     // creates polygon drawer and subcribes to on mouse click event in canvas
     state = eAppState::DRAWING;
 
-    polygonDrawer = new PolygonDrawer(canvas);
-    canvas->AddDrawer(polygonDrawer);
+    polygonDrawer = new PolygonDrawer(window->Canvas());
+    window->Canvas()->AddDrawer(polygonDrawer);
 
     auto point = createNewPoint(QPoint(-10, -10));
     mouseFollower->AddPoint(point);

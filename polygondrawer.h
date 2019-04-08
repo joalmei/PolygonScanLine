@@ -20,6 +20,7 @@ public:
 
 private:
     void oddEvenFillMethod(std::vector<QPoint*>& vertices, QPainter& painter);
+
 };
 
 #endif // POLYGONDRAWER_H

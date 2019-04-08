@@ -16,7 +16,6 @@ private:
     eAppState state = eAppState::WAITING;
 
     MainWindow* window;
-    CanvasOpenGL* canvas;
 
     // UI
     HintBoxDrawer* hintBox;
