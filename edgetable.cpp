@@ -5,7 +5,7 @@ EdgeTable::EdgeTable(vector<QPoint> Pontos){//Funcao que preenche a EdgeTable
     if(Pontos.size() <= 1)
         return;
 
-    ET.resize(ALTURA);
+    Tabela.resize(ALTURA);
     IsEmpty.resize(ALTURA, true);
 
     for(size_t i = 0; i < (Pontos.size()) - 1; i++){//Percorre todos os pontos menos o ultimo
@@ -15,8 +15,8 @@ EdgeTable::EdgeTable(vector<QPoint> Pontos){//Funcao que preenche a EdgeTable
             BlocoET b(Pontos[i].y(), Pontos[i + 1].y(), Pontos[i].x(), Pontos[i + 1].x());
 
             //Aloca o bloco na posicao ymin da EdgeTable e ordena os blocos existentes na posicao ymin em ordem crescente de x
-            ET[static_cast<size_t>(Pontos[i].y())].push_back(b);
-            sort(ET[static_cast<size_t>(Pontos[i].y())].begin(), ET[static_cast<size_t>(Pontos[i].y())].end());
+            Tabela[static_cast<size_t>(Pontos[i].y())].push_back(b);
+            sort(Tabela[static_cast<size_t>(Pontos[i].y())].begin(), Tabela[static_cast<size_t>(Pontos[i].y())].end());
 
             //Adiciona ao vetor IsEmpty na posicao i o valor false
             IsEmpty[static_cast<size_t>(Pontos[i].y())] = false;
@@ -27,8 +27,8 @@ EdgeTable::EdgeTable(vector<QPoint> Pontos){//Funcao que preenche a EdgeTable
             BlocoET b(Pontos[i + 1].y(), Pontos[i].y(), Pontos[i + 1].x(), Pontos[i].x());
 
             //Aloca o bloco na posicao ymin da EdgeTable e ordena os blocos existentes na posicao ymin em ordem crescente de x
-            ET[static_cast<size_t>(Pontos[i + 1].y())].push_back(b);
-            sort(ET[static_cast<size_t>(Pontos[i + 1].y())].begin(), ET[static_cast<size_t>(Pontos[i + 1].y())].end());
+            Tabela[static_cast<size_t>(Pontos[i + 1].y())].push_back(b);
+            sort(Tabela[static_cast<size_t>(Pontos[i + 1].y())].begin(), Tabela[static_cast<size_t>(Pontos[i + 1].y())].end());
 
             //Adiciona ao vetor NotEmpty na posicao i+1 o valor false
             IsEmpty[static_cast<size_t>(Pontos[i + 1].y())] = false;
@@ -41,14 +41,14 @@ EdgeTable::EdgeTable(vector<QPoint> Pontos){//Funcao que preenche a EdgeTable
     //Coloca o ultimo bloco (ultima reta), que depende do ultimo ponto e o primeiro
     if(Pontos[N].y() < Pontos[0].y()){
         BlocoET b(Pontos[N].y(), Pontos[0].y(), Pontos[N].x(), Pontos[0].x());
-        ET[static_cast<size_t>(Pontos[N].y())].push_back(b);
-        sort(ET[static_cast<size_t>(Pontos[N].y())].begin(), ET[static_cast<size_t>(Pontos[N].y())].end());
+        Tabela[static_cast<size_t>(Pontos[N].y())].push_back(b);
+        sort(Tabela[static_cast<size_t>(Pontos[N].y())].begin(), Tabela[static_cast<size_t>(Pontos[N].y())].end());
         IsEmpty[static_cast<size_t>(Pontos[N].y())] = false;
     }
     else if(Pontos[N].y() > Pontos[0].y()) {
         BlocoET b(Pontos[0].y(), Pontos[N].y(), Pontos[0].x(), Pontos[N].x());
-        ET[static_cast<size_t>(Pontos[0].y())].push_back(b);
-        sort(ET[static_cast<size_t>(Pontos[0].y())].begin(), ET[static_cast<size_t>(Pontos[0].y())].end());
+        Tabela[static_cast<size_t>(Pontos[0].y())].push_back(b);
+        sort(Tabela[static_cast<size_t>(Pontos[0].y())].begin(), Tabela[static_cast<size_t>(Pontos[0].y())].end());
         IsEmpty[static_cast<size_t>(Pontos[0].y())] = false;
     }
 }
