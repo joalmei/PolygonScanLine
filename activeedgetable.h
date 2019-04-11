@@ -3,6 +3,7 @@
 
 #include "edgetable.h"
 #include <qpainter.h>
+//#include "iostream"
 
 class ActiveEdgeTable
 {
@@ -10,9 +11,9 @@ public:
     ActiveEdgeTable(vector<QPoint> Vertices);
     void DrawAETMethod(QPainter& painter);
     int FloatIntegerAdaptation(float x);
-private:
+//private:
     EdgeTable ET;
-    vector<vector<BlocoET>> AET;
+    vector<BlocoET> AET;
 };
 
 #endif // ACTIVEEDGETABLE_H
