@@ -19,7 +19,7 @@ public:
     EdgeTable(vector<QPoint> Pontos);
 
     vector<bool> IsEmpty;
-    vector<vector<BlocoET>> ET;
+    vector<vector<BlocoET>> Tabela;
 
     void DrawAETMethod();
 };
