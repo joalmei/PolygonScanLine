@@ -30,7 +30,7 @@ void ActiveEdgeTable::DrawAETMethod(QPainter& painter){
                 }
                 else{
                 for(size_t k = j; k < AET.size() - 1; k++)
-                    AET[j] = AET[j + 1];
+                    AET[k] = AET[k + 1];
                 AET.pop_back();
                 j--;
                 }
@@ -43,7 +43,7 @@ void ActiveEdgeTable::DrawAETMethod(QPainter& painter){
         }
         else if(AET.size() > 1){
             for(size_t j = 0; j < AET.size() - 1; j++){
-                for(int k = FloatIntegerAdaptation(AET[j].get_x()); k < AET[j + 1].get_x(); k++){
+                for(int k = FloatIntegerAdaptation(AET[j].get_x()); k < FloatIntegerAdaptation(AET[j + 1].get_x()); k++){
                     painter.drawPoint(k, static_cast<int>(i));
                     //cout << "Grade [" << k << " " << static_cast<int>(i) << ")" << endl;
                 }
