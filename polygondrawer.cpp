@@ -27,9 +27,10 @@ void PolygonDrawer::Draw(QColor pointsColor) {
     points.reserve(Vertices.size());
     for(auto vertex : Vertices)
         points.push_back(*vertex);
-    painter.drawPolygon(points.data(), points.size(), Qt::OddEvenFill);
+    //painter.drawPolygon(points.data(), points.size(), Qt::OddEvenFill);
     // our method to implement:
-    oddEvenFillMethod(Vertices, painter);
+    AETMethod(points, painter);
+    //oddEvenFillMethod(Vertices, painter);
 }
 
 // ==================================================================================================
@@ -39,7 +40,6 @@ void PolygonDrawer::oddEvenFillMethod(std::vector<QPoint*>& vertices, QPainter& 
     for (auto i = vertices.begin(); i != vertices.end(); i++) {
         painter.drawPoint(**i);
     }
-
     /* EXAMPLE OF A WHITE SQUARE WITH SIZE 100 X 100
     for (int i = 100; i <= 200; i++) {
         for(int j = 100; j <= 200; j++) {
@@ -48,3 +48,11 @@ void PolygonDrawer::oddEvenFillMethod(std::vector<QPoint*>& vertices, QPainter& 
     }
     */
 }
+void PolygonDrawer::AETMethod(vector<QPoint> points, QPainter& painter){
+    if(points.size() >= 2){
+        ActiveEdgeTable AET(points);
+        AET.DrawAETMethod(painter);
+    }
+}
+
+
