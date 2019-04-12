@@ -7,14 +7,18 @@ ActiveEdgeTable::ActiveEdgeTable(vector<QPoint> Vertices) : ET(Vertices){
 void ActiveEdgeTable::DrawAETMethod(QPainter& painter){
     size_t i = 0;
 
-    while(i < ALTURA){
+    while(((!AET.empty()) || (!ET.Tabela.empty())) && i < ALTURA){
 
         //Transfere o cesto i da ET na AET e ordena
-        if(!ET.IsEmpty[i]){
-            for(size_t j = 0; j < ET.Tabela[i].size(); j++){
+        if(!ET.Tabela[i].empty()/*!ET.IsEmpty[i]*/){
+            /*for(size_t j = 0; j < ET.Tabela[i].size(); j++){
                 AET.push_back(ET.Tabela[i][j]);
-                sort(AET.begin(), AET.end());
+            }*/
+            for(int j = static_cast<int>(ET.Tabela[i].size()) - 1; j >= 0; j--){
+                AET.push_back(ET.Tabela[i][static_cast<size_t>(j)]);
+                ET.Tabela[i].pop_back();
             }
+            sort(AET.begin(), AET.end());
         }
 
         //Retira os lados y = ymax
@@ -52,7 +56,6 @@ void ActiveEdgeTable::DrawAETMethod(QPainter& painter){
         //Reordena a AET
         sort(AET.begin(), AET.end());
     }
-
 }
 
 //Funcao para retornar x+1 caso seja float e x caso seja inteiro
