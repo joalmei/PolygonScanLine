@@ -18,8 +18,10 @@ class EdgeTable
 public:
     EdgeTable(vector<QPoint> Pontos);
 
-    vector<bool> IsEmpty;
     vector<vector<BlocoET>> Tabela;
+    vector<bool> VariavelQueNaoFazNadaMasSeTirarCrasha;
+
+    //int LastElement;
 
     void DrawAETMethod();
 };
