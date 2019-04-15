@@ -17,7 +17,7 @@ MainWindow::MainWindow(QWidget *parent) :
 
     ui->setupUi(this);
 
-    setWindowTitle(tr("Mid Point Algorithm Tester"));
+    setWindowTitle(tr("Scan Line Algorithm Tester"));
     openGlCanvas = ui->centralWidget->findChild<CanvasOpenGL*>();
 }
 
@@ -50,20 +50,19 @@ void MainWindow::on_ClearButton_clicked() {
     emit clearPressed();
 }
 
-// ==================================================================================================
-void MainWindow::on_ColorR_valueChanged(double red) {
-    color.setRed(static_cast<int>(red));
-    openGlCanvas->SetPointsColor(color);
+
+#include <QColorDialog>
+
+void MainWindow::on_changeColor_released() {
+    //QColorDialogTester color_test;
+    //color_test.onColor();
+
+    QColor color = QColorDialog::getColor(this->color, this );
+    if( color.isValid() )
+    {
+        this->color = color;
+        openGlCanvas->SetPointsColor(color);
+    }
 }
 
-// ==================================================================================================
-void MainWindow::on_ColorG_valueChanged(double green) {
-    color.setGreen(static_cast<int>(green));
-    openGlCanvas->SetPointsColor(color);
-}
 
-// ==================================================================================================
-void MainWindow::on_ColorB_valueChanged(double blue) {
-    color.setBlue(static_cast<int>(blue));
-    openGlCanvas->SetPointsColor(color);
-}

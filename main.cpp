@@ -2,7 +2,6 @@
 #include <QApplication>
 #include "appcontroller.h"
 
-
 // ==================================================================================================
 int main(int argc, char *argv[]) {
     QApplication a(argc, argv);
@@ -10,6 +9,5 @@ int main(int argc, char *argv[]) {
     w.show();
 
     AppController app(&w);
-
     return a.exec();
 }

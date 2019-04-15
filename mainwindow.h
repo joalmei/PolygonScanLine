@@ -43,10 +43,7 @@ signals:
 
 private slots:
     void on_ClearButton_clicked();
-
-    void on_ColorR_valueChanged(double);
-    void on_ColorG_valueChanged(double);
-    void on_ColorB_valueChanged(double);
+    void on_changeColor_released();
 };
 
 #endif // MAINWINDOW_H
