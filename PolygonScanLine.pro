@@ -34,7 +34,8 @@ SOURCES += \
     mousefollower.cpp \
     hintboxdrawer.cpp \
     appcontroller.cpp \
-    vertexholderdrawer.cpp
+    vertexholderdrawer.cpp \
+    blocoet.cpp
 
 HEADERS += \
         mainwindow.h \
@@ -45,7 +46,8 @@ HEADERS += \
     mousefollower.h \
     hintboxdrawer.h \
     appcontroller.h \
-    vertexholderdrawer.h
+    vertexholderdrawer.h \
+    blocoet.h
 
 FORMS += \
         mainwindow.ui

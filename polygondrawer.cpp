@@ -40,11 +40,6 @@ void PolygonDrawer::Draw(QColor pointsColor) {
 
 
 void PolygonDrawer::oddEvenFillMethod(std::vector<QPoint*>& vertices, QPainter& painter) {
-    //Rotina para pintar os pontos escolhidos
-    for (auto i = vertices.begin(); i != vertices.end(); i++) {
-        painter.drawPoint(**i);
-    }
-
     //Aplica o AET apenas para 2 ou mais pontos
     if (vertices.size() < 2) { return; }
 
