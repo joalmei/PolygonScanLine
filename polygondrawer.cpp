@@ -1,7 +1,6 @@
 #include "polygondrawer.h"
 #include "canvasopengl.h"
 
-
 // ==================================================================================================
 // PUBLIC MEMBERS
 // ==================================================================================================
@@ -27,32 +26,81 @@ void PolygonDrawer::Draw(QColor pointsColor) {
     points.reserve(Vertices.size());
     for(auto vertex : Vertices)
         points.push_back(*vertex);
+
+    //Metodo do qpainter.h para desenho de poligonos
     //painter.drawPolygon(points.data(), points.size(), Qt::OddEvenFill);
+
     // our method to implement:
-    AETMethod(points, painter);
-    //oddEvenFillMethod(Vertices, painter);
+    oddEvenFillMethod(Vertices, painter);
 }
 
 // ==================================================================================================
 // PRIVATE MEMBERS
 // ==================================================================================================
+
+
 void PolygonDrawer::oddEvenFillMethod(std::vector<QPoint*>& vertices, QPainter& painter) {
+    //Rotina para pintar os pontos escolhidos
     for (auto i = vertices.begin(); i != vertices.end(); i++) {
         painter.drawPoint(**i);
     }
-    /* EXAMPLE OF A WHITE SQUARE WITH SIZE 100 X 100
-    for (int i = 100; i <= 200; i++) {
-        for(int j = 100; j <= 200; j++) {
-            painter.drawPoint(i, j);
+
+    //Aplica o AET apenas para 2 ou mais pontos
+    if (vertices.size() < 2) { return; }
+
+    //Rotina para preencher a EdgeTable
+    std::map<int, std::list<BlocoET>> et;
+    for (size_t i = 0; i < vertices.size(); i++) {
+        // a -> b
+        QPoint* a = vertices[i];
+        QPoint* b = vertices[(i+1) % vertices.size()];
+
+        if (a->y() == b->y()) { continue; }
+        if (a->y() > b->y()) {
+            auto swap = a;
+            a = b;
+            b = swap;
         }
-    }
-    */
-}
-void PolygonDrawer::AETMethod(vector<QPoint> points, QPainter& painter){
-    if(points.size() >= 2){
-        ActiveEdgeTable AET(points);
-        AET.DrawAETMethod(painter);
-    }
-}
 
+        BlocoET aux(a->y(), b->y(), a->x(), b->x());
+        et[a->y()].push_back(aux);
+    }
 
+    //Cria a AET vazia
+    std::list<BlocoET> aet;
+
+    int y = 0;
+    while (!et.empty() || !aet.empty()) {
+        //Remove todos os pontos cujo y = ymax
+        aet.remove_if([y](const BlocoET val) { return val.ymax == y; });
+
+        //Transfere os valores da ET na posicao y para a AET
+        auto etvals = et[y];
+        aet.insert(aet.end(), etvals.begin(), etvals.end());
+        et.erase(y);
+
+        //Ordena se necessário
+        aet.sort([](const BlocoET &b1, const BlocoET &b2) { return (b1.x < b2.x); });
+
+        //Desenha as linhas e incrementa os valores de x para a proxima iteracao
+        auto it = aet.begin();
+        while (it != aet.end()) {
+            // get x for print
+            auto x_beg = (ceil(it->x));
+
+            // update point
+            it->x += it->m;
+            it++;
+
+            auto x_end = (ceil(it->x));
+
+            // update point
+            it->x += it->m;
+            it++;
+
+            painter.drawLine(static_cast<int>(x_beg), y, static_cast<int>(x_end) - 1, y);
+        }
+
+        y++;
+    }
+}
