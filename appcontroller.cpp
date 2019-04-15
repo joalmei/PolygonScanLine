@@ -8,6 +8,7 @@
 AppController::AppController(MainWindow* window) {
     this->window = window;
     mouseFollower = new MouseFollower(window->Canvas());
+    hintBox = nullptr;
 
     beginDrawing();
     subscribeMouseActions();
@@ -45,7 +46,10 @@ void AppController::clearAllData() {
         delete h;
     holders.clear();
     delete polygonDrawer;
-    delete hintBox;
+    if(hintBox != nullptr) {
+        delete hintBox;
+        hintBox = nullptr;
+    }
 }
 
 // ==================================================================================================
@@ -61,7 +65,8 @@ void AppController::onKeyReleased(int key) {
 
 // ==================================================================================================
 void AppController::onClearPressed() {
-    mouseFollower->RemovePoint(vertices.back());
+    if (vertices.size() > 0)
+        mouseFollower->RemovePoint(vertices.back());
     clearAllData();
     window->Canvas()->ClearScreen();
 
