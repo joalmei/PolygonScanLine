@@ -16,21 +16,9 @@ void PolygonDrawer::Draw(QColor pointsColor) {
     QPainter painter(canvas);
 
     QPen myPen(pointsColor);
-    QBrush brush(pointsColor, Qt::SolidPattern);
-
     painter.setPen(myPen);
-    painter.setBrush(brush);
 
-    // qt built-in method that implements the MidPointAlgorithm:
-    vector<QPoint> points;
-    points.reserve(Vertices.size());
-    for(auto vertex : Vertices)
-        points.push_back(*vertex);
-
-    //Metodo do qpainter.h para desenho de poligonos
-    //painter.drawPolygon(points.data(), points.size(), Qt::OddEvenFill);
-
-    // our method to implement:
+    // scan line algorithm
     oddEvenFillMethod(Vertices, painter);
 }
 
