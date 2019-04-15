@@ -9,7 +9,7 @@ public:
     double x, m;
 
     BlocoET(int ymin, int ymax, int xmin, int xmax);
-    BlocoET(int ymax, float x, float m);
+    BlocoET(int ymax, double x, double m);
     bool operator < (BlocoET obj);
 };
 
