@@ -15,6 +15,9 @@ AppController::AppController(MainWindow* window) {
 
     connect(window, &MainWindow::keyReleased, this, &AppController::onKeyReleased);
     connect(window, &MainWindow::clearPressed, this, &AppController::onClearPressed);
+    connect(window, &MainWindow::editPressed, this, &AppController::onEditPressed);
+    connect(window, &MainWindow::lightingValueChanged, this, &AppController::onLightingValueChanged);
+    connect(window, &MainWindow::cameraRotationChanged, this, &AppController::onCameraRotationChanged);
 }
 
 // ==================================================================================================
@@ -50,16 +53,25 @@ void AppController::clearAllData() {
         delete hintBox;
         hintBox = nullptr;
     }
+
+    delete lighting;
+    delete camera;
 }
 
 // ==================================================================================================
 // PUBLIC MEMBERS (SLOTS)
 // ==================================================================================================
 void AppController::onKeyReleased(int key) {
-    if (((key == Qt::Key_Escape) || (key == Qt::Key_Enter) || (key == Qt::Key_Return)) &&
-            state == eAppState::DRAWING) {
-        endDrawing();
-        beginWaiting();
+    if (((key == Qt::Key_Escape) || (key == Qt::Key_Enter) || (key == Qt::Key_Return))) {
+        if (state == eAppState::DRAWING)
+            endDrawing();
+        else if (state == eAppState::WAITING)
+            endWaiting();
+        else if (state == eAppState::EDITING)
+            endEditing();
+
+        //beginWaiting();
+        beginVisualizing();
     }
 }
 
@@ -75,6 +87,31 @@ void AppController::onClearPressed() {
 }
 
 // ==================================================================================================
+void AppController::onEditPressed() {
+    if (state != eAppState::VISUALIZING) return;
+    endVisualizing();
+    beginWaiting();
+}
+
+// ==================================================================================================
+void AppController::onLightingValueChanged(int x, int y, int z) {
+    light.setX(x);
+    light.setY(y);
+    light.setZ(z);
+
+    window->Canvas()->update();
+}
+
+void AppController::onCameraRotationChanged(int x, int y, int z) {
+    QVector3D rot(x, y, z);
+    camera->SetRotation(rot);
+
+    window->Canvas()->update();
+}
+
+// ==================================================================================================
+
+#include <iostream>
 void AppController::subscribeMouseActions() {
     // DRAWING BEHAVIOUR
     window->Canvas()->OnMousePressed.push_back([this](QMouseEvent* e) {
@@ -95,10 +132,10 @@ void AppController::subscribeMouseActions() {
     window->Canvas()->OnMouseMoved.push_back([this](QMouseEvent* e) {
         if (state != eAppState::WAITING) { return; }
 
-        int closest = -1;
+        size_t closest = 0;
         float minDist = 100000000;
 
-        for (int i = 0; i < vertices.size(); i++) {
+        for (size_t i = 0; i < vertices.size(); i++) {
             auto dist = QVector2D(*vertices[i] - e->pos()).lengthSquared();
             if (dist < minDist) {
                 closest = i;
@@ -106,9 +143,9 @@ void AppController::subscribeMouseActions() {
             }
         }
 
-        if (minDist > 500) { closest = -1; }
+        if (minDist > 500) { closest = 0; }
 
-        for (int i = 0; i < holders.size(); i++)
+        for (size_t i = 0; i < holders.size(); i++)
             holders[i]->setIsSelected(i == closest);
     });
 
@@ -122,6 +159,8 @@ void AppController::subscribeMouseActions() {
                endWaiting();
                beginEditing();
            }
+
+       (void) e;
     });
 
     // SETUP EDITING TRANSITION
@@ -129,9 +168,27 @@ void AppController::subscribeMouseActions() {
         if (state != eAppState::EDITING) { return; }
         endEditing();
         beginWaiting();
+
+        (void) e;
+    });
+
+    // SETUP VISUALIZATION
+    window->Canvas()->OnMouseMoved.push_back([this](QMouseEvent* e) {
+        if (state != eAppState::VISUALIZING) { return; }
+        GLint dx = e->x() - this->mousePos.x();
+        GLint dy = e->y() - this->mousePos.y();
+
+        if (e->buttons() & Qt::LeftButton) {
+            QVector3D rot(2*dy, 2*dx, 0);
+            camera->Rotate(rot);
+            std::cout << dx << " " << dy << std::endl;
+        }
+
+        this->mousePos = e->pos();
+
+        window->Canvas()->update();
     });
 }
-
 // ==================================================================================================
 // STATE MACHINE
 // ==================================================================================================
@@ -139,7 +196,12 @@ void AppController::beginDrawing() {
     // creates polygon drawer and subcribes to on mouse click event in canvas
     state = eAppState::DRAWING;
 
-    polygonDrawer = new PolygonDrawer(window->Canvas());
+    camera = new Camera(QVector3D(0, 0, 0), QVector3D(0, 0, 0));
+    light.setZ(1);
+    lighting = new LightSource(LightSource::Type::DIRECTIONAL, &light, 1.0);
+
+
+    polygonDrawer = new PolygonDrawer(window->Canvas(), lighting, camera);
     window->Canvas()->AddDrawer(polygonDrawer);
 
     auto point = createNewPoint(QPoint(-10, -10));
@@ -148,9 +210,20 @@ void AppController::beginDrawing() {
 
 void AppController::beginWaiting() {
     state = eAppState::WAITING;
+
+    if (polygonDrawer->Vertices.size() == 3) {
+        hintBox = new HintBoxDrawer(window->Canvas());
+        hintBox->Text = "Press \"Esc\" or \"Enter\" to quit edit mode";
+        window->Canvas()->AddDrawer(hintBox);
+    }
 }
+
 void AppController::beginEditing() {
     state = eAppState::EDITING;
+}
+
+void AppController::beginVisualizing() {
+    state = eAppState::VISUALIZING;
 }
 
 void AppController::endDrawing() {
@@ -159,11 +232,15 @@ void AppController::endDrawing() {
 }
 
 void AppController::endWaiting() {
-
 }
+
 void AppController::endEditing() {
     for (auto h : holders)
        if (h->IsSelected()) {
            mouseFollower->RemovePoint(h->Vertex());
        }
+}
+
+void AppController::endVisualizing() {
+    window->onReset();
 }

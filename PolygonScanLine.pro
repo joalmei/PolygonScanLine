@@ -4,7 +4,8 @@
 #
 #-------------------------------------------------
 
-QT       += core gui
+QT       += core gui opengl
+LIBS     += -lopengl32
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
@@ -25,6 +26,9 @@ DEFINES += QT_DEPRECATED_WARNINGS
 CONFIG += c++11
 
 SOURCES += \
+    camera.cpp \
+    cgutils.cpp \
+    lightsource.cpp \
         main.cpp \
         mainwindow.cpp \
     canvasopengl.cpp \
@@ -38,6 +42,9 @@ SOURCES += \
     blocoet.cpp
 
 HEADERS += \
+    camera.h \
+    cgutils.h \
+    lightsource.h \
         mainwindow.h \
     canvasopengl.h \
     polygondrawer.h \

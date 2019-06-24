@@ -4,6 +4,11 @@
 #include "mainwindow.h"
 #include "vertexholderdrawer.h"
 
+#include "lightsource.h"
+#include "camera.h"
+
+#include <QVector3D>
+
 class AppController : public QObject {
     Q_OBJECT
 private:
@@ -11,6 +16,7 @@ private:
         DRAWING,
         WAITING,
         EDITING,
+        VISUALIZING,
     };
 
     eAppState state = eAppState::WAITING;
@@ -28,6 +34,13 @@ private:
     std::vector<VertexHolderDrawer*> holders;
     std::vector<QPoint*> vertices;
 
+    // LIGHTING DATA
+    //std::vector<QPoint*> lights;
+    QVector3D light;
+    LightSource* lighting;
+    Camera* camera;
+    QPoint mousePos;
+
 public:
     AppController(MainWindow*);
     ~AppController();
@@ -40,14 +53,20 @@ private:
     void beginDrawing();
     void beginWaiting();
     void beginEditing();
+    void beginVisualizing();
 
     void endDrawing();
     void endWaiting();
     void endEditing();
+    void endVisualizing();
 
 private slots:
     void onKeyReleased(int key);
     void onClearPressed();
+    void onEditPressed();
+
+    void onLightingValueChanged(int x, int y, int z);
+    void onCameraRotationChanged(int x, int y, int z);
 };
 
 #endif // APPCONTROLLER_H

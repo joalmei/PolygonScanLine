@@ -6,10 +6,11 @@ class BlocoET
 {
 public:
     int ymax;
-    double x, m;
+    double x, mx;
+    double z, mz;
 
-    BlocoET(int ymin, int ymax, int xmin, int xmax);
-    BlocoET(int ymax, double x, double m);
+    BlocoET(int ymin, int ymax, int xmin, int xmax, int zmax, int zmin);
+    BlocoET(int ymax, double x, double mx, double z, double mz);
     bool operator < (BlocoET obj);
 };
 
