@@ -64,6 +64,7 @@ private slots:
     void onKeyReleased(int key);
     void onClearPressed();
     void onEditPressed();
+    void onShadingChanged(const QString&);
 
     void onLightingValueChanged(int x, int y, int z);
     void onCameraRotationChanged(int x, int y, int z);

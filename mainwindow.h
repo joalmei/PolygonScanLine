@@ -44,6 +44,7 @@ signals:
     void keyReleased(int);
     void clearPressed();
     void editPressed();
+    void shadingChanged(const QString&);
 
     void lightingValueChanged(int, int, int);
     void cameraRotationChanged(int, int, int);

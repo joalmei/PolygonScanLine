@@ -143,7 +143,7 @@ void MainWindow::on_isPerspective_stateChanged(int state) {
 
 // ==================================================================================================
 void MainWindow::on_toningValue_currentTextChanged(const QString &shading) {
-
+    emit shadingChanged(shading);
 }
 
 // ==================================================================================================

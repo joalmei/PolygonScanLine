@@ -24,11 +24,23 @@ void PolygonDrawer::Draw(QColor paintColor) {
     for(size_t i = 0; i < zbuffer.size(); i++)
         zbuffer[i].resize(static_cast<size_t>(canvas->height()), 10000000); // todo: camera far / near
 
-    auto faces = preparePoints();
+    auto meshData = preparePoints();
+    auto faces = meshData.first;
+    auto normals = meshData.second;
     for (auto face : faces)
-        oddEvenFillMethod(face, paintColor, zbuffer);
+        switch (shading) {
+        case Shading::FLAT :
+            oddEvenFillMethodFLAT(face, paintColor, zbuffer);
+            break;
+        case Shading::GOURAUD :
+            oddEvenFillMethodGOURAULD(face, normals, paintColor, zbuffer);
+            break;
+        case Shading::PHONG:
+            oddEvenFillMethodFLAT(face, paintColor, zbuffer);
+        }
 }
 
+// ==================================================================================================
 void PolygonDrawer::SetShading(PolygonDrawer::Shading shading) {
     this->shading = shading;
 }
@@ -38,15 +50,14 @@ void PolygonDrawer::SetShading(PolygonDrawer::Shading shading) {
 // ==================================================================================================
 #include <iostream>
 
-void PolygonDrawer::oddEvenFillMethod(vector<QVector3D>& vertices,
+void PolygonDrawer::oddEvenFillMethodFLAT(vector<QVector3D*>& vertices,
                                       QColor& paintColor,
                                       vector<vector<int>>& zbuffer) {
     // Lighting
     QColor diffColor = paintColor;
-    if (shading == Shading::FLAT) {
-        auto normal = QVector3D::normal(vertices[0] - vertices[1], vertices[2] - vertices[1]);
-        diffColor = flatColor(normal, diffColor);
-    }
+    auto normal = QVector3D::normal(*vertices[0] - *vertices[1], *vertices[2] - *vertices[1]);
+    diffColor = flatColor(normal, diffColor);
+
 
     QPainter painter(canvas);
     QPen myPen(diffColor);
@@ -102,27 +113,40 @@ void PolygonDrawer::oddEvenFillMethod(vector<QVector3D>& vertices,
     }
 }
 
+// ==================================================================================================
+map<int, list<BlocoET> > PolygonDrawer::prepareEt(vector<QVector3D *> &vertices) {
+    map<QVector3D*, QVector3D> mock;
+    return prepareEt(vertices, mock);
+}
 
-map<int, list<BlocoET>> PolygonDrawer::prepareEt(vector<QVector3D>& vertices) {
+// ==================================================================================================
+map<int, list<BlocoET>> PolygonDrawer::prepareEt(vector<QVector3D*>& vertices, map<QVector3D*, QVector3D>& normals) {
     map<int, list<BlocoET>> et;
-    for (size_t i = 0; i < vertices.size(); i++) {
+    auto n = vertices.size();
+    for (size_t i = 0; i < n; i++) {
         // a -> b
-        QVector3D a = vertices[i];
-        QVector3D b = vertices[(i+1) % vertices.size()];
+        auto a = vertices[i];
+        auto b = vertices[(i+1) % n];
 
-        if (static_cast<int>(a.y()) == static_cast<int>(b.y())) { continue; }
-        if (a.y() > b.y()) {
+        if (static_cast<int>(a->y()) == static_cast<int>(b->y())) { continue; }
+        if (a->y() > b->y()) {
             auto swap = a;
             a = b;
             b = swap;
         }
 
-        BlocoET aux(static_cast<int>(a.y()), static_cast<int>(b.y()), static_cast<int>(a.x()), static_cast<int>(b.x()), static_cast<int>(a.z()), static_cast<int>(b.z()));
-        et[static_cast<int>(a.y())].push_back(aux);
+        BlocoET aux(static_cast<int>(a->y()), static_cast<int>(b->y()),
+                    static_cast<int>(a->x()), static_cast<int>(b->x()),
+                    static_cast<int>(a->z()), static_cast<int>(b->z()),
+                    shading == Shading::GOURAUD ? shade(*a, normals[a]) : 0,
+                    shading == Shading::GOURAUD ? shade(*b, normals[b]) : 0);
+
+        et[static_cast<int>(a->y())].push_back(aux);
     }
     return et;
 }
 
+// ==================================================================================================
 void PolygonDrawer::updateAET (int y, list<BlocoET>& aet, map<int, list<BlocoET>>& et) {
     //Remove todos os pontos cujo y = ymax
     aet.remove_if([y](const BlocoET val) { return val.ymax == y; });
@@ -136,16 +160,14 @@ void PolygonDrawer::updateAET (int y, list<BlocoET>& aet, map<int, list<BlocoET>
     aet.sort([](const BlocoET &b1, const BlocoET &b2) { return (b1.x < b2.x); });
 }
 
-QColor PolygonDrawer::shade(QVector3D& point, QColor& color) {
+// ==================================================================================================
+double PolygonDrawer::shade(QVector3D& point, QVector3D& normal) {
     // Lighting
-    auto normal = QVector3D(0, 0, -1);
-
     auto diff = light->Diffuse(point, normal);
-    return QColor(static_cast<int>(color.red() * diff),
-                  static_cast<int>(color.green() * diff),
-                  static_cast<int>(color.blue() * diff));
+    return diff;
 }
 
+// ==================================================================================================
 QColor PolygonDrawer::flatColor(QVector3D &n, QColor &c) {
     auto l = QVector3D(0, 0, -1);   // view direction
     auto cosTheta = clamp01(QVector3D::dotProduct(n, l));
@@ -154,22 +176,37 @@ QColor PolygonDrawer::flatColor(QVector3D &n, QColor &c) {
                   static_cast<int>(c.blue() * cosTheta));
 }
 
+// ==================================================================================================
 // returns all faces of the polyedre
-vector<vector<QVector3D>> PolygonDrawer::preparePoints() {
-    vector<vector<QVector3D>> faces;
+std::pair<vector<vector<QVector3D*>>, map<QVector3D*, QVector3D>> PolygonDrawer::preparePoints() {
+    vector<vector<QVector3D*>> faces;
+    map<QVector3D*, QVector3D> normals;
 
-    // front face
-    vector<QVector3D> front;
-    vector<QVector3D> back;
+    // front and back
+    vector<QVector3D*> front;
+    vector<QVector3D*> back;
     for (auto v : Vertices) {
-        front.push_back(QVector3D(v->x(), v->y(), 0));
-        back.push_back(QVector3D(v->x(), v->y(), this->extrusion));
+        front.push_back(new QVector3D(v->x(), v->y(), 0));
+        back.push_back(new QVector3D(v->x(), v->y(), this->extrusion));
     }
 
-    // sides
+    auto frontNormal = QVector3D::normal(*front[0] - *front[1], *front[2] - *front[1]);
+    for (auto v : front)
+        normals[v] = frontNormal / 3;
+
+    auto backNormal = -frontNormal;
+    for (auto v : back)
+        normals[v] = backNormal / 3;
+
     size_t n = Vertices.size();
-    for (size_t i = 0; i < n; i++)
-        faces.push_back({back[i], back[(i+1)%n], front[(i+1)%n], front[i]});
+    for (size_t i = 0; i < n; i++) {
+        vector<QVector3D*> face = {back[i], back[(i+1)%n], front[(i+1)%n], front[i]};
+        faces.push_back(face);
+
+        auto normal = QVector3D::normal(*face[0] - *face[1], *face[2] - *face[1]);
+        for(auto v : face)
+            normals[v] += normal / 3;
+    }
 
     faces.push_back(front);
     reverse(back.begin(), back.end());
@@ -188,29 +225,95 @@ vector<vector<QVector3D>> PolygonDrawer::preparePoints() {
 
     for (size_t f = 0; f < faces.size(); f++) {
         for (size_t i = 0; i < faces[f].size(); i++) {
-            faces[f][i] = t1 * faces[f][i];
-            faces[f][i] = rot * faces[f][i];
-            faces[f][i] = t2 * faces[f][i];
+            (*faces[f][i]) = t1 * (*faces[f][i]);
+            (*faces[f][i]) = rot * (*faces[f][i]);
+            (*faces[f][i]) = t2 * (*faces[f][i]);
         }
     }
 
-    return faces;
+    return make_pair(faces, normals);
+}
+
+// ==================================================================================================
+void PolygonDrawer::oddEvenFillMethodGOURAULD(vector<QVector3D*>& vertices,
+                                      map<QVector3D*, QVector3D>& normals,
+                                      QColor& paintColor,
+                                      vector<vector<int>>& zbuffer) {
+    // Lighting
+    QColor diffColor = paintColor;
+    QPainter painter(canvas);
+    QPen myPen(diffColor);
+    painter.setPen(myPen);
+
+    // Inicializa a ET e a AET
+    auto et = prepareEt(vertices, normals);
+    list<BlocoET> aet;
+
+    int y = 0;
+    while (!et.empty() || !aet.empty()) {
+        updateAET(y, aet, et);
+
+        //Desenha as linhas e incrementa os valores de x para a proxima iteracao
+        auto it = aet.begin();
+        while (it != aet.end()) {
+            // 1st line
+            auto x_beg = static_cast<int>(ceil(it->x));
+            auto z_beg = static_cast<int>(ceil(it->z));
+            auto light_beg = it->light;
+            it->x += it->mx;
+            it->z += it->mz;
+            it->light += it->mlight;
+            it++;
+
+            // 2nd line
+            auto x_end = static_cast<int>(ceil(it->x));
+            auto z_end = static_cast<int>(ceil(it->z));
+            auto light_end = it->light;
+            it->x += it->mx;
+            it->z += it->mz;
+            it->light += it->mlight;
+            it++;
+
+            // setup gradient in line
+            QLinearGradient linearGrad(x_beg, y, x_end, y);
+            QVector3D start (x_beg, y, 0);
+            QVector3D end (x_end, y, 0);
+            QColor startColor (static_cast<int>(diffColor.red() * light_beg), static_cast<int>(diffColor.green() * light_beg), static_cast<int>(diffColor.blue() * light_beg));
+            QColor endColor (static_cast<int>(diffColor.red() * light_end), static_cast<int>(diffColor.green() * light_end), static_cast<int>(diffColor.blue() * light_end));
+            linearGrad.setColorAt(0, startColor);
+            linearGrad.setColorAt(1, endColor);
+            QPen myPen(diffColor);
+            QBrush brush(linearGrad);
+            myPen.setBrush(brush);
+            painter.setPen(myPen);
+
+            // Z-BUFFER
+            int x_init_z = -1;
+            int x_end_z = -1;
+            for (auto x = x_beg; x < x_end; x++) {
+                auto z = static_cast<int>(z_beg + (z_end - z_beg)*(x - x_beg)/(x_end - x_beg));
+                if (zbuffer[static_cast<size_t>(x)][static_cast<size_t>(y)] > z) {
+                    if (x_init_z < 0) x_init_z = x;
+                    x_end_z = x;
+                    zbuffer[static_cast<size_t>(x)][static_cast<size_t>(y)] = z;
+                }
+                else  {
+                    if (x_init_z != -1)
+                        painter.drawLine(x_init_z, y, x_end_z, y);
+                    x_init_z = -1;
+                }
+            }
+
+            if (x_init_z != -1)
+                painter.drawLine(x_init_z, y, x_end_z, y);
+        }
+
+        y++;
+    }
 }
 
 
 
-
-//            QLinearGradient linearGrad(x_beg, y, x_end, y);
-//            QVector3D start (x_beg, y, 0);
-//            QVector3D end (x_end, y, 0);
-//            auto startColor = shade(start, diffColor);
-//            auto endColor = shade(end, diffColor);
-//            linearGrad.setColorAt(0, startColor);
-//            linearGrad.setColorAt(1, endColor);
-//            QPen myPen(diffColor);
-//            QBrush brush(linearGrad);
-//            myPen.setBrush(brush);
-//            painter.setPen(myPen);
 
 //auto normal = QVector3D::normal(QVector3D(vertices[0]->x() - vertices[1]->x(),vertices[0]->y() - vertices[1]->y(), vertices[0]->y() - vertices[1]->y()),
 //                                QVector3D(vertices[2]->x() - vertices[1]->x(),vertices[2]->y() - vertices[1]->y(), vertices[2]->y() - vertices[1]->y()));

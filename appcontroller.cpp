@@ -18,6 +18,7 @@ AppController::AppController(MainWindow* window) {
     connect(window, &MainWindow::editPressed, this, &AppController::onEditPressed);
     connect(window, &MainWindow::lightingValueChanged, this, &AppController::onLightingValueChanged);
     connect(window, &MainWindow::cameraRotationChanged, this, &AppController::onCameraRotationChanged);
+    connect(window, &MainWindow::shadingChanged, this, &AppController::onShadingChanged);
 }
 
 // ==================================================================================================
@@ -63,7 +64,7 @@ void AppController::clearAllData() {
 // ==================================================================================================
 void AppController::onKeyReleased(int key) {
     if (((key == Qt::Key_Escape) || (key == Qt::Key_Enter) || (key == Qt::Key_Return))
-            && polygonDrawer->Vertices.size() > 3) {
+            && polygonDrawer->Vertices.size() > 2) {
         if (state == eAppState::DRAWING)
             endDrawing();
         else if (state == eAppState::WAITING)
@@ -92,6 +93,15 @@ void AppController::onEditPressed() {
     if (state != eAppState::VISUALIZING) return;
     endVisualizing();
     beginWaiting();
+}
+
+void AppController::onShadingChanged(const QString & shading) {
+    if (shading == "Phong")
+        polygonDrawer->SetShading(PolygonDrawer::Shading::PHONG);
+    else if (shading == "Gouraud")
+        polygonDrawer->SetShading(PolygonDrawer::Shading::GOURAUD);
+    else
+        polygonDrawer->SetShading(PolygonDrawer::Shading::FLAT);
 }
 
 // ==================================================================================================
@@ -198,7 +208,7 @@ void AppController::beginDrawing() {
 
     camera = new Camera(QVector3D(0, 0, 0), QVector3D(0, 0, 0));
     light.setZ(1);
-    lighting = new LightSource(LightSource::Type::DIRECTIONAL, &light, 1.0);
+    lighting = new LightSource(LightSource::Type::POINT, &light, 1.0);
 
 
     polygonDrawer = new PolygonDrawer(window->Canvas(), lighting, camera);

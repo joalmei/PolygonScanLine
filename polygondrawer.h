@@ -45,18 +45,29 @@ public:
     void SetShading(Shading);
 
 private:
-    void oddEvenFillMethod(vector<QVector3D>& vertices, QColor& diffColor, vector<vector<int>>& zbuffer);
+    void oddEvenFillMethodFLAT(vector<QVector3D*>& vertices,
+                           QColor& diffColor,
+                           vector<vector<int>>& zbuffer);
+
+    void oddEvenFillMethodGOURAULD(vector<QVector3D*>& vertices,
+                           map<QVector3D*, QVector3D>& normals,
+                           QColor& diffColor,
+                           vector<vector<int>>& zbuffer);
 
     // SCAN LINE HELPERS
-    map<int, list<BlocoET>> prepareEt(vector<QVector3D>& vertices);
+    map<int, list<BlocoET>> prepareEt(vector<QVector3D*>& vertices);
+    map<int, list<BlocoET>> prepareEt(vector<QVector3D*>& vertices, map<QVector3D*, QVector3D>& normals);
     void updateAET (int y, list<BlocoET>& aet, map<int, list<BlocoET>>& et);
 
     // Shading
-    QColor shade(QVector3D& p, QColor& color);
+    double shade(QVector3D& p, QVector3D& normal);
     QColor flatColor(QVector3D& n, QColor& c);
 
     // Projection Helper
-    vector<vector<QVector3D>> preparePoints();
+    // returns all faces and all normals to all vetices
+    pair<vector<vector<QVector3D*>>, map<QVector3D*, QVector3D>> preparePoints();
+
+    void printScanLine(int xbeg, int xend, QColor& cbeg, QColor& cend, QPainter& painter);
 };
 
 
