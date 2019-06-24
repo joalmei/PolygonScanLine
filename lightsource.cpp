@@ -33,10 +33,11 @@ std::pair<double, double> LightSource::FullLighting(QVector3D& point, QVector3D 
 
     auto n = normal.normalized();
 
-    auto cosTheta = clamp01(QVector3D::dotProduct(l, n));
+    auto dot = QVector3D::dotProduct(l, n);
+    auto cosTheta = clamp01(dot);
 
     auto s = (view - point).normalized();
-    auto r = 2 * cosTheta * n - l;
+    auto r = 2 * dot * n - l;
 
     auto cosAlpha = clamp01(QVector3D::dotProduct(s, r));
 

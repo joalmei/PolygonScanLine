@@ -176,6 +176,8 @@ void MainWindow::onReset() {
     this->ui->lightValueY->setValue(openGlCanvas->height()/2);
     this->ui->lightValueZ->setValue(-10);
     emit lightingValueChanged(0, 0, 1);
+    this->ui->toningValue->setCurrentIndex(0);
+    emit shadingChanged("Flat");
 
     openGlCanvas->sethMin(-50);
     openGlCanvas->sethMax(50);

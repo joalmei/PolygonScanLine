@@ -35,10 +35,10 @@ private:
     LightSource* light;
     Camera* camera;
     Shading shading;
-    float extrusion = 100;
+    float extrusion = 50;
     double cteAmb = 0.2;
-    double cteDiff = 3.9;
-    double cteSpec = 0.8;
+    double cteDiff = 2.9;
+    double cteSpec = 0.3;
     double shininess = 3;
 
 public:
@@ -57,6 +57,12 @@ private:
                            map<QVector3D*, QVector3D>& normals,
                            QColor& diffColor,
                            vector<vector<int>>& zbuffer);
+
+    void oddEvenFillMethodPHONG(vector<QVector3D*>& vertices,
+                           map<QVector3D*, QVector3D>& normals,
+                           QColor& diffColor,
+                           vector<vector<int>>& zbuffer);
+
 
     // SCAN LINE HELPERS
     map<int, list<BlocoET>> prepareEt(vector<QVector3D*>& vertices);

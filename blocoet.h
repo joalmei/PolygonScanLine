@@ -1,6 +1,7 @@
 #ifndef BLOCOET_H
 #define BLOCOET_H
 
+#include <QVector3D>
 
 class BlocoET
 {
@@ -9,9 +10,17 @@ public:
     double x, mx;
     double z, mz;
     double r, g, b, mr, mg, mb;
+    QVector3D n, mn;
 
-    BlocoET(int ymin, int ymax, int xmin, int xmax, int zmax, int zmin,
-            double rmin = 0, double rmax = 0, double gmin = 0, double gmax = 0, double bmin = 0, double bmax = 0);
+    BlocoET(int ymin, int ymax, int xmin, int xmax, int zmin, int zmax);
+
+    // GOURAUD
+    BlocoET(int ymin, int ymax, int xmin, int xmax, int zmin, int zmax,
+            double rmin, double rmax, double gmin, double gmax, double bmin, double bmax);
+
+    // PHONG
+    BlocoET(int ymin, int ymax, int xmin, int xmax, int zmin, int zmax,
+            QVector3D& nmin, QVector3D& nmax);
 
     bool operator < (BlocoET obj);
 };

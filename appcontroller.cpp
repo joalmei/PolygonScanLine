@@ -217,7 +217,7 @@ void AppController::beginDrawing() {
     light.setZ(1);
     lighting = new LightSource(LightSource::Type::POINT, &light, 1.0);
 
-
+    shading = PolygonDrawer::Shading::FLAT;
     polygonDrawer = new PolygonDrawer(window->Canvas(), lighting, camera);
     window->Canvas()->AddDrawer(polygonDrawer);
 
