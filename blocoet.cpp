@@ -2,28 +2,21 @@
 
 #include <iostream>
 
-BlocoET::BlocoET(int ymin, int ymax, int xmin, int xmax, int zmin, int zmax, double lightmin, double lightmax) {
+BlocoET::BlocoET(int ymin, int ymax, int xmin, int xmax, int zmin, int zmax,
+                 double rmin, double rmax, double gmin, double gmax, double bmin, double bmax) {
     this->ymax = ymax;
 
     this->x = static_cast<double>(xmin);
     this->z = static_cast<double>(zmin);
-    this->light = static_cast<double>(lightmin);
+    this->r = static_cast<double>(rmin);
+    this->g = static_cast<double>(gmin);
+    this->b = static_cast<double>(bmin);
 
     this->mx = static_cast<double>(xmax - xmin) / static_cast<double>(ymax - ymin);
     this->mz = static_cast<double>(zmax - zmin) / static_cast<double>(ymax - ymin);
-    this->mlight = static_cast<double>(lightmax - lightmin) / static_cast<double>(ymax - ymin);
-}
-
-BlocoET::BlocoET(int ymax, double x, double mx, double z, double mz, double light, double mlight){
-    this->ymax = ymax;
-
-    this->x = x;
-    this->z = z;
-    this->light = light;
-
-    this->mx = mx;
-    this->mz = mz;
-    this->mlight = mlight;
+    this->mr = static_cast<double>(rmax - rmin) / static_cast<double>(ymax - ymin);
+    this->mg = static_cast<double>(gmax - gmin) / static_cast<double>(ymax - ymin);
+    this->mb = static_cast<double>(bmax - bmin) / static_cast<double>(ymax - ymin);
 }
 
 bool BlocoET::operator < (BlocoET obj){

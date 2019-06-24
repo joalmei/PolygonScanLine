@@ -172,9 +172,9 @@ void MainWindow::onReset() {
     emit cameraRotationChanged(0, 0, 0);
 
     // Lighting
-    this->ui->lightValueX->setValue(0);
-    this->ui->lightValueY->setValue(0);
-    this->ui->lightValueZ->setValue(1);
+    this->ui->lightValueX->setValue(openGlCanvas->width()/2);
+    this->ui->lightValueY->setValue(openGlCanvas->height()/2);
+    this->ui->lightValueZ->setValue(-10);
     emit lightingValueChanged(0, 0, 1);
 
     openGlCanvas->sethMin(-50);

@@ -116,11 +116,14 @@ void PolygonDrawer::oddEvenFillMethodFLAT(vector<QVector3D*>& vertices,
 // ==================================================================================================
 map<int, list<BlocoET> > PolygonDrawer::prepareEt(vector<QVector3D *> &vertices) {
     map<QVector3D*, QVector3D> mock;
-    return prepareEt(vertices, mock);
+    QColor col;
+    return prepareEt(vertices, mock, col);
 }
 
 // ==================================================================================================
-map<int, list<BlocoET>> PolygonDrawer::prepareEt(vector<QVector3D*>& vertices, map<QVector3D*, QVector3D>& normals) {
+map<int, list<BlocoET>> PolygonDrawer::prepareEt(vector<QVector3D*>& vertices,
+                                                 map<QVector3D*, QVector3D>& normals,
+                                                 QColor& paintColor) {
     map<int, list<BlocoET>> et;
     auto n = vertices.size();
     for (size_t i = 0; i < n; i++) {
@@ -135,13 +138,26 @@ map<int, list<BlocoET>> PolygonDrawer::prepareEt(vector<QVector3D*>& vertices, m
             b = swap;
         }
 
-        BlocoET aux(static_cast<int>(a->y()), static_cast<int>(b->y()),
-                    static_cast<int>(a->x()), static_cast<int>(b->x()),
-                    static_cast<int>(a->z()), static_cast<int>(b->z()),
-                    shading == Shading::GOURAUD ? shade(*a, normals[a]) : 0,
-                    shading == Shading::GOURAUD ? shade(*b, normals[b]) : 0);
+        if (shading == Shading::GOURAUD) {
+            auto aColor = shade(*a, normals[a], paintColor);
+            auto bColor = shade(*b, normals[b], paintColor);
 
-        et[static_cast<int>(a->y())].push_back(aux);
+            BlocoET aux(static_cast<int>(a->y()), static_cast<int>(b->y()),
+                        static_cast<int>(a->x()), static_cast<int>(b->x()),
+                        static_cast<int>(a->z()), static_cast<int>(b->z()),
+                        aColor.red(), bColor.red(),
+                        aColor.green(), bColor.green(),
+                        aColor.blue(), bColor.blue());
+
+            et[static_cast<int>(a->y())].push_back(aux);
+        }
+        else {
+            BlocoET aux(static_cast<int>(a->y()), static_cast<int>(b->y()),
+                        static_cast<int>(a->x()), static_cast<int>(b->x()),
+                        static_cast<int>(a->z()), static_cast<int>(b->z()));
+
+            et[static_cast<int>(a->y())].push_back(aux);
+        }
     }
     return et;
 }
@@ -161,10 +177,17 @@ void PolygonDrawer::updateAET (int y, list<BlocoET>& aet, map<int, list<BlocoET>
 }
 
 // ==================================================================================================
-double PolygonDrawer::shade(QVector3D& point, QVector3D& normal) {
+QColor PolygonDrawer::shade(QVector3D& point, QVector3D& normal, QColor& paintColor) {
     // Lighting
-    auto diff = light->Diffuse(point, normal);
-    return diff;
+    auto view = camera->GetPosition();
+    auto fullLight = light->FullLighting(point, normal, view, shininess);
+    auto diff = cteAmb + cteDiff * fullLight.first;
+    auto spec = cteSpec * fullLight.second;
+    QColor out;
+    out.setRgbF(clamp01(diff * paintColor.redF() + spec),
+                clamp01(diff * paintColor.greenF() + spec),
+                clamp01(diff * paintColor.blueF() + spec));
+    return out;
 }
 
 // ==================================================================================================
@@ -186,7 +209,7 @@ std::pair<vector<vector<QVector3D*>>, map<QVector3D*, QVector3D>> PolygonDrawer:
     vector<QVector3D*> front;
     vector<QVector3D*> back;
     for (auto v : Vertices) {
-        front.push_back(new QVector3D(v->x(), v->y(), 0));
+        front.push_back(new QVector3D(v->x(), v->y(), -this->extrusion));
         back.push_back(new QVector3D(v->x(), v->y(), this->extrusion));
     }
 
@@ -246,7 +269,7 @@ void PolygonDrawer::oddEvenFillMethodGOURAULD(vector<QVector3D*>& vertices,
     painter.setPen(myPen);
 
     // Inicializa a ET e a AET
-    auto et = prepareEt(vertices, normals);
+    auto et = prepareEt(vertices, normals, paintColor);
     list<BlocoET> aet;
 
     int y = 0;
@@ -259,29 +282,31 @@ void PolygonDrawer::oddEvenFillMethodGOURAULD(vector<QVector3D*>& vertices,
             // 1st line
             auto x_beg = static_cast<int>(ceil(it->x));
             auto z_beg = static_cast<int>(ceil(it->z));
-            auto light_beg = it->light;
+            QColor col_beg (static_cast<int>(it->r), static_cast<int>(it->g), static_cast<int>(it->b));
             it->x += it->mx;
             it->z += it->mz;
-            it->light += it->mlight;
+            it->r += it->mr;
+            it->g += it->mg;
+            it->b += it->mb;
             it++;
 
             // 2nd line
             auto x_end = static_cast<int>(ceil(it->x));
             auto z_end = static_cast<int>(ceil(it->z));
-            auto light_end = it->light;
+            QColor col_end (static_cast<int>(it->r), static_cast<int>(it->g), static_cast<int>(it->b));
             it->x += it->mx;
             it->z += it->mz;
-            it->light += it->mlight;
+            it->r += it->mr;
+            it->g += it->mg;
+            it->b += it->mb;
             it++;
 
             // setup gradient in line
             QLinearGradient linearGrad(x_beg, y, x_end, y);
             QVector3D start (x_beg, y, 0);
             QVector3D end (x_end, y, 0);
-            QColor startColor (static_cast<int>(diffColor.red() * light_beg), static_cast<int>(diffColor.green() * light_beg), static_cast<int>(diffColor.blue() * light_beg));
-            QColor endColor (static_cast<int>(diffColor.red() * light_end), static_cast<int>(diffColor.green() * light_end), static_cast<int>(diffColor.blue() * light_end));
-            linearGrad.setColorAt(0, startColor);
-            linearGrad.setColorAt(1, endColor);
+            linearGrad.setColorAt(0, col_beg);
+            linearGrad.setColorAt(1, col_end);
             QPen myPen(diffColor);
             QBrush brush(linearGrad);
             myPen.setBrush(brush);
