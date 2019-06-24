@@ -20,7 +20,17 @@ double LightSource::Diffuse(QVector3D &point, QVector3D &normal) {
 
 std::pair<double, double> LightSource::FullLighting(QVector3D& point, QVector3D &normal,
                                                     QVector3D& view, double shininess) {
-    auto l = type == Type::POINT ? (*vector - point).normalized() : -1.0 * vector->normalized();
+    QVector3D l;
+
+    if (type == Type::POINT) {
+        l = (*vector - point);
+        auto d = l.length();
+        l /= d;
+    }
+    else {
+        l = vector->normalized();
+    }
+
     auto n = normal.normalized();
 
     auto cosTheta = clamp01(QVector3D::dotProduct(l, n));

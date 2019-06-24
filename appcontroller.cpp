@@ -97,11 +97,13 @@ void AppController::onEditPressed() {
 
 void AppController::onShadingChanged(const QString & shading) {
     if (shading == "Phong")
-        polygonDrawer->SetShading(PolygonDrawer::Shading::PHONG);
+        this->shading = PolygonDrawer::Shading::PHONG;
     else if (shading == "Gouraud")
-        polygonDrawer->SetShading(PolygonDrawer::Shading::GOURAUD);
+        this->shading = PolygonDrawer::Shading::GOURAUD;
     else
-        polygonDrawer->SetShading(PolygonDrawer::Shading::FLAT);
+        this->shading = PolygonDrawer::Shading::FLAT;
+
+    polygonDrawer->SetShading(this->shading);
 }
 
 // ==================================================================================================
@@ -192,6 +194,11 @@ void AppController::subscribeMouseActions() {
         if (e->buttons() & Qt::LeftButton) {
             QVector3D rot(2*dy, 2*dx, 0);
             camera->Rotate(rot);
+
+            polygonDrawer->SetShading(PolygonDrawer::Shading::FLAT);
+        }
+        else {
+            polygonDrawer->SetShading(this->shading);
         }
 
         this->mousePos = e->pos();

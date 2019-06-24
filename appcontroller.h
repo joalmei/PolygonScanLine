@@ -40,6 +40,7 @@ private:
     LightSource* lighting;
     Camera* camera;
     QPoint mousePos;
+    PolygonDrawer::Shading shading;
 
 public:
     AppController(MainWindow*);
