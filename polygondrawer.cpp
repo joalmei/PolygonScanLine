@@ -1,5 +1,6 @@
 #include "polygondrawer.h"
 #include "canvasopengl.h"
+#include <iostream>
 
 #include "cgutils.h"
 
@@ -16,12 +17,22 @@ PolygonDrawer::~PolygonDrawer() {}
 void PolygonDrawer::Draw(QColor pointsColor) {
     // scan line algorithm
 
-    std::vector<std::vector<int>> zbuffer(static_cast<size_t>(canvas->width()));
+    vector<vector<int>> zbuffer(static_cast<size_t>(canvas->width()));
     for(size_t i = 0; i < zbuffer.size(); i++)
         zbuffer[i].resize(static_cast<size_t>(canvas->height()), 10000000);
 
-    auto pts = preparePoints();
-    oddEvenFillMethod(pts, pointsColor, zbuffer);
+    auto faces = preparePoints();
+
+    oddEvenFillMethod(faces[0], pointsColor, zbuffer);
+
+    QColor backColor("blue");
+    oddEvenFillMethod(faces[1], backColor, zbuffer);
+
+    QColor sideColor;
+    for (size_t i = 2; i < faces.size(); i++) {
+        sideColor.setRedF((1.0*i-1.0)/(1.0*faces.size() - 1.0));
+        oddEvenFillMethod(faces[i], sideColor, zbuffer);
+    }
 }
 
 void PolygonDrawer::SetShading(PolygonDrawer::Shading shading) {
@@ -33,9 +44,9 @@ void PolygonDrawer::SetShading(PolygonDrawer::Shading shading) {
 // ==================================================================================================
 #include <iostream>
 
-void PolygonDrawer::oddEvenFillMethod(std::vector<QVector3D>& vertices,
+void PolygonDrawer::oddEvenFillMethod(vector<QVector3D>& vertices,
                                       QColor& diffColor,
-                                      std::vector<std::vector<int>>& zbuffer) {
+                                      vector<vector<int>>& zbuffer) {
     //Aplica o ScanLine apenas para 2 ou mais pontos
     if (vertices.size() < 3) { return; }
 
@@ -46,7 +57,7 @@ void PolygonDrawer::oddEvenFillMethod(std::vector<QVector3D>& vertices,
 
     // Inicializa a ET e a AET
     auto et = prepareEt(vertices);
-    std::list<BlocoET> aet;
+    list<BlocoET> aet;
 
     int y = 0;
     while (!et.empty() || !aet.empty()) {
@@ -79,9 +90,15 @@ void PolygonDrawer::oddEvenFillMethod(std::vector<QVector3D>& vertices,
                     x_end_z = x;
                     zbuffer[static_cast<size_t>(x)][static_cast<size_t>(y)] = z;
                 }
+                else  {
+                    if (x_init_z != -1)
+                        painter.drawLine(x_init_z, y, x_end_z, y);
+                    x_init_z = -1;
+                }
             }
 
-            painter.drawLine(x_init_z, y, x_end_z, y);
+            if (x_init_z != -1)
+                painter.drawLine(x_init_z, y, x_end_z, y);
         }
 
         y++;
@@ -89,8 +106,8 @@ void PolygonDrawer::oddEvenFillMethod(std::vector<QVector3D>& vertices,
 }
 
 
-std::map<int, std::list<BlocoET>> PolygonDrawer::prepareEt(std::vector<QVector3D>& vertices) {
-    std::map<int, std::list<BlocoET>> et;
+map<int, list<BlocoET>> PolygonDrawer::prepareEt(vector<QVector3D>& vertices) {
+    map<int, list<BlocoET>> et;
     for (size_t i = 0; i < vertices.size(); i++) {
         // a -> b
         QVector3D a = vertices[i];
@@ -109,7 +126,7 @@ std::map<int, std::list<BlocoET>> PolygonDrawer::prepareEt(std::vector<QVector3D
     return et;
 }
 
-void PolygonDrawer::updateAET (int y, std::list<BlocoET>& aet, std::map<int, std::list<BlocoET>>& et) {
+void PolygonDrawer::updateAET (int y, list<BlocoET>& aet, map<int, list<BlocoET>>& et) {
     //Remove todos os pontos cujo y = ymax
     aet.remove_if([y](const BlocoET val) { return val.ymax == y; });
 
@@ -132,31 +149,46 @@ QColor PolygonDrawer::shade(QVector3D& point, QColor& color) {
                   static_cast<int>(color.blue() * diff));
 }
 
-std::vector<QVector3D> PolygonDrawer::preparePoints() {
-    std::vector<QVector3D> points;
-    for (auto v : Vertices) {
-        points.push_back(QVector3D(v->x(), v->y(), 0));
-    }
+// returns all faces of the polyedre
+vector<vector<QVector3D>> PolygonDrawer::preparePoints() {
+    vector<vector<QVector3D>> faces;
 
+    // front face
+    vector<QVector3D> front;
+    vector<QVector3D> back;
+    for (auto v : Vertices) {
+        front.push_back(QVector3D(v->x(), v->y(), 0));
+        back.push_back(QVector3D(v->x(), v->y(), this->extrusion));
+    }
+    faces.push_back(front);
+    faces.push_back(back);
+
+    // sides
+    size_t n = Vertices.size();
+    for (size_t i = 0; i < n; i++)
+        faces.push_back({front[i], front[(i+1)%n], back[(i+1)%n], back[i]});
+
+
+    // transform all points
     QMatrix4x4 t1;
     t1.translate(-canvas->width()/2, -canvas->height()/2, 0);
     QMatrix4x4 t2;
     t2.translate(canvas->width()/2, canvas->height()/2, 0);
-    QMatrix4x4 transform;
+    QMatrix4x4 rot;
     auto rotation = camera->GetRotation();
-    transform.rotate(rotation.x(), 1, 0, 0);
-    transform.rotate(rotation.y(), 0, 1, 0);
-    transform.rotate(rotation.z(), 0, 0, 1);
+    rot.rotate(rotation.x(), 1, 0, 0);
+    rot.rotate(rotation.y(), 0, 1, 0);
+    rot.rotate(rotation.z(), 0, 0, 1);
 
-    for (size_t i = 0; i < points.size(); i++) {
-        //std::cout << "before : " << points[i].x() << " " << points[i].y() << " " << points[i].z() << std::endl;
-        points[i] = t1 * points[i];
-        points[i] = transform * points[i];
-        points[i] = t2 * points[i];
-        //std::cout << "after : " << points[i].x() << " " << points[i].y() << " " << points[i].z() << std::endl;
+    for (size_t f = 0; f < faces.size(); f++) {
+        for (size_t i = 0; i < faces[f].size(); i++) {
+            faces[f][i] = t1 * faces[f][i];
+            faces[f][i] = rot * faces[f][i];
+            faces[f][i] = t2 * faces[f][i];
+        }
     }
 
-    return points;
+    return faces;
 }
 
 

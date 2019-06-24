@@ -15,6 +15,11 @@ class CanvasOpenGL;
 #include "lightsource.h"
 #include "camera.h"
 
+#include <map>
+#include <vector>
+
+using namespace std;
+
 class PolygonDrawer : public Drawer
 {
 public:
@@ -24,13 +29,13 @@ public:
         PHONG
     };
 
-    std::vector<QPoint*> Vertices;
+    vector<QPoint*> Vertices;
 
 private:
     LightSource* light;
     Camera* camera;
     Shading shading;
-    double extrusion = 50;
+    float extrusion = 50;
 
 public:
     PolygonDrawer(CanvasOpenGL* canvas, LightSource* light, Camera* camera);
@@ -40,17 +45,17 @@ public:
     void SetShading(Shading);
 
 private:
-    void oddEvenFillMethod(std::vector<QVector3D>& vertices, QColor& diffColor, std::vector<std::vector<int>>& zbuffer);
+    void oddEvenFillMethod(vector<QVector3D>& vertices, QColor& diffColor, vector<vector<int>>& zbuffer);
 
     // SCAN LINE HELPERS
-    std::map<int, std::list<BlocoET>> prepareEt(std::vector<QVector3D>& vertices);
-    void updateAET (int y, std::list<BlocoET>& aet, std::map<int, std::list<BlocoET>>& et);
+    map<int, list<BlocoET>> prepareEt(vector<QVector3D>& vertices);
+    void updateAET (int y, list<BlocoET>& aet, map<int, list<BlocoET>>& et);
 
     // Shading
     QColor shade(QVector3D& p, QColor& color);
 
     // Projection Helper
-    std::vector<QVector3D> preparePoints();
+    vector<vector<QVector3D>> preparePoints();
 };
 
 

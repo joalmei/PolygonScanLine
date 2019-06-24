@@ -182,7 +182,6 @@ void AppController::subscribeMouseActions() {
         if (e->buttons() & Qt::LeftButton) {
             QVector3D rot(2*dy, 2*dx, 0);
             camera->Rotate(rot);
-            std::cout << dx << " " << dy << std::endl;
         }
 
         this->mousePos = e->pos();
