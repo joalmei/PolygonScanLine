@@ -17,6 +17,8 @@ public:
 
     void setIsSelected(const bool isSelected);
     bool IsSelected() const;
+
+    bool IsHidden = false;
 };
 
 #endif // VERTEXHOLDERDRAWER_H

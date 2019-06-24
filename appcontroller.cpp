@@ -62,7 +62,8 @@ void AppController::clearAllData() {
 // PUBLIC MEMBERS (SLOTS)
 // ==================================================================================================
 void AppController::onKeyReleased(int key) {
-    if (((key == Qt::Key_Escape) || (key == Qt::Key_Enter) || (key == Qt::Key_Return))) {
+    if (((key == Qt::Key_Escape) || (key == Qt::Key_Enter) || (key == Qt::Key_Return))
+            && polygonDrawer->Vertices.size() > 3) {
         if (state == eAppState::DRAWING)
             endDrawing();
         else if (state == eAppState::WAITING)
@@ -210,12 +211,6 @@ void AppController::beginDrawing() {
 
 void AppController::beginWaiting() {
     state = eAppState::WAITING;
-
-    if (polygonDrawer->Vertices.size() == 3) {
-        hintBox = new HintBoxDrawer(window->Canvas());
-        hintBox->Text = "Press \"Esc\" or \"Enter\" to quit edit mode";
-        window->Canvas()->AddDrawer(hintBox);
-    }
 }
 
 void AppController::beginEditing() {
@@ -224,11 +219,14 @@ void AppController::beginEditing() {
 
 void AppController::beginVisualizing() {
     state = eAppState::VISUALIZING;
+
+    hintBox->Dismiss();
+    for (auto h : holders)
+        h->IsHidden = true;
 }
 
 void AppController::endDrawing() {
     mouseFollower->RemovePoint(polygonDrawer->Vertices.back());
-    hintBox->Dismiss();
 }
 
 void AppController::endWaiting() {
@@ -243,4 +241,8 @@ void AppController::endEditing() {
 
 void AppController::endVisualizing() {
     window->onReset();
+
+    hintBox->Show();
+    for (auto h : holders)
+        h->IsHidden = false;
 }

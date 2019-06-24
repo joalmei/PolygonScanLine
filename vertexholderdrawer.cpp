@@ -13,6 +13,8 @@ VertexHolderDrawer::~VertexHolderDrawer() {
 }
 
 void VertexHolderDrawer::Draw(QColor color) {
+    if (IsHidden) return;
+
     std::vector<QPoint> points = {
         QPoint(vertex->x() - QUAD_EXTENT, vertex->y()),
         QPoint(vertex->x(), vertex->y() + QUAD_EXTENT),
