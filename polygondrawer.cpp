@@ -1,5 +1,6 @@
 #include "polygondrawer.h"
 #include "canvasopengl.h"
+#include <algorithm>
 #include <iostream>
 
 #include "cgutils.h"
@@ -14,25 +15,18 @@ PolygonDrawer::PolygonDrawer(CanvasOpenGL* canvas, LightSource* light, Camera* c
 PolygonDrawer::~PolygonDrawer() {}
 
 // ==================================================================================================
-void PolygonDrawer::Draw(QColor pointsColor) {
-    // scan line algorithm
+void PolygonDrawer::Draw(QColor paintColor) {
+    //Aplica o ScanLine apenas para 2 ou mais pontos
+    if (Vertices.size() < 3) { return; }
+
 
     vector<vector<int>> zbuffer(static_cast<size_t>(canvas->width()));
     for(size_t i = 0; i < zbuffer.size(); i++)
-        zbuffer[i].resize(static_cast<size_t>(canvas->height()), 10000000);
+        zbuffer[i].resize(static_cast<size_t>(canvas->height()), 10000000); // todo: camera far / near
 
     auto faces = preparePoints();
-
-    oddEvenFillMethod(faces[0], pointsColor, zbuffer);
-
-    QColor backColor("blue");
-    oddEvenFillMethod(faces[1], backColor, zbuffer);
-
-    QColor sideColor;
-    for (size_t i = 2; i < faces.size(); i++) {
-        sideColor.setRedF((1.0*i-1.0)/(1.0*faces.size() - 1.0));
-        oddEvenFillMethod(faces[i], sideColor, zbuffer);
-    }
+    for (auto face : faces)
+        oddEvenFillMethod(face, paintColor, zbuffer);
 }
 
 void PolygonDrawer::SetShading(PolygonDrawer::Shading shading) {
@@ -45,12 +39,15 @@ void PolygonDrawer::SetShading(PolygonDrawer::Shading shading) {
 #include <iostream>
 
 void PolygonDrawer::oddEvenFillMethod(vector<QVector3D>& vertices,
-                                      QColor& diffColor,
+                                      QColor& paintColor,
                                       vector<vector<int>>& zbuffer) {
-    //Aplica o ScanLine apenas para 2 ou mais pontos
-    if (vertices.size() < 3) { return; }
-
     // Lighting
+    QColor diffColor = paintColor;
+    if (shading == Shading::FLAT) {
+        auto normal = QVector3D::normal(vertices[0] - vertices[1], vertices[2] - vertices[1]);
+        diffColor = flatColor(normal, diffColor);
+    }
+
     QPainter painter(canvas);
     QPen myPen(diffColor);
     painter.setPen(myPen);
@@ -149,6 +146,14 @@ QColor PolygonDrawer::shade(QVector3D& point, QColor& color) {
                   static_cast<int>(color.blue() * diff));
 }
 
+QColor PolygonDrawer::flatColor(QVector3D &n, QColor &c) {
+    auto l = QVector3D(0, 0, -1);   // view direction
+    auto cosTheta = clamp01(QVector3D::dotProduct(n, l));
+    return QColor(static_cast<int>(c.red() * cosTheta),
+                  static_cast<int>(c.green() * cosTheta),
+                  static_cast<int>(c.blue() * cosTheta));
+}
+
 // returns all faces of the polyedre
 vector<vector<QVector3D>> PolygonDrawer::preparePoints() {
     vector<vector<QVector3D>> faces;
@@ -160,14 +165,15 @@ vector<vector<QVector3D>> PolygonDrawer::preparePoints() {
         front.push_back(QVector3D(v->x(), v->y(), 0));
         back.push_back(QVector3D(v->x(), v->y(), this->extrusion));
     }
-    faces.push_back(front);
-    faces.push_back(back);
 
     // sides
     size_t n = Vertices.size();
     for (size_t i = 0; i < n; i++)
-        faces.push_back({front[i], front[(i+1)%n], back[(i+1)%n], back[i]});
+        faces.push_back({back[i], back[(i+1)%n], front[(i+1)%n], front[i]});
 
+    faces.push_back(front);
+    reverse(back.begin(), back.end());
+    faces.push_back(back);
 
     // transform all points
     QMatrix4x4 t1;

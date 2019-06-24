@@ -53,6 +53,7 @@ private:
 
     // Shading
     QColor shade(QVector3D& p, QColor& color);
+    QColor flatColor(QVector3D& n, QColor& c);
 
     // Projection Helper
     vector<vector<QVector3D>> preparePoints();
