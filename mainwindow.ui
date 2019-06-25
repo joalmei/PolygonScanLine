@@ -82,13 +82,13 @@ COLOR</string>
     <property name="geometry">
      <rect>
       <x>730</x>
-      <y>5</y>
+      <y>10</y>
       <width>121</width>
-      <height>111</height>
+      <height>141</height>
      </rect>
     </property>
     <property name="title">
-     <string>Observador</string>
+     <string>Camera Rotation</string>
     </property>
     <property name="alignment">
      <set>Qt::AlignCenter</set>
@@ -103,7 +103,7 @@ COLOR</string>
      <property name="geometry">
       <rect>
        <x>50</x>
-       <y>75</y>
+       <y>100</y>
        <width>60</width>
        <height>27</height>
       </rect>
@@ -122,7 +122,7 @@ COLOR</string>
      <property name="geometry">
       <rect>
        <x>50</x>
-       <y>25</y>
+       <y>30</y>
        <width>60</width>
        <height>27</height>
       </rect>
@@ -141,7 +141,7 @@ COLOR</string>
      <property name="geometry">
       <rect>
        <x>50</x>
-       <y>50</y>
+       <y>65</y>
        <width>60</width>
        <height>27</height>
       </rect>
@@ -160,7 +160,7 @@ COLOR</string>
      <property name="geometry">
       <rect>
        <x>10</x>
-       <y>25</y>
+       <y>30</y>
        <width>21</width>
        <height>27</height>
       </rect>
@@ -176,7 +176,7 @@ COLOR</string>
      <property name="geometry">
       <rect>
        <x>10</x>
-       <y>50</y>
+       <y>65</y>
        <width>21</width>
        <height>27</height>
       </rect>
@@ -192,7 +192,7 @@ COLOR</string>
      <property name="geometry">
       <rect>
        <x>10</x>
-       <y>75</y>
+       <y>100</y>
        <width>16</width>
        <height>27</height>
       </rect>
@@ -209,13 +209,13 @@ COLOR</string>
     <property name="geometry">
      <rect>
       <x>730</x>
-      <y>127</y>
+      <y>180</y>
       <width>121</width>
-      <height>111</height>
+      <height>141</height>
      </rect>
     </property>
     <property name="title">
-     <string>Iluminação</string>
+     <string>Point Light Position</string>
     </property>
     <property name="alignment">
      <set>Qt::AlignCenter</set>
@@ -230,7 +230,7 @@ COLOR</string>
      <property name="geometry">
       <rect>
        <x>50</x>
-       <y>75</y>
+       <y>100</y>
        <width>60</width>
        <height>27</height>
       </rect>
@@ -249,7 +249,7 @@ COLOR</string>
      <property name="geometry">
       <rect>
        <x>50</x>
-       <y>25</y>
+       <y>30</y>
        <width>60</width>
        <height>27</height>
       </rect>
@@ -268,7 +268,7 @@ COLOR</string>
      <property name="geometry">
       <rect>
        <x>50</x>
-       <y>50</y>
+       <y>65</y>
        <width>60</width>
        <height>27</height>
       </rect>
@@ -287,7 +287,7 @@ COLOR</string>
      <property name="geometry">
       <rect>
        <x>10</x>
-       <y>25</y>
+       <y>30</y>
        <width>21</width>
        <height>27</height>
       </rect>
@@ -303,7 +303,7 @@ COLOR</string>
      <property name="geometry">
       <rect>
        <x>10</x>
-       <y>50</y>
+       <y>65</y>
        <width>21</width>
        <height>27</height>
       </rect>
@@ -319,7 +319,7 @@ COLOR</string>
      <property name="geometry">
       <rect>
        <x>10</x>
-       <y>75</y>
+       <y>100</y>
        <width>16</width>
        <height>27</height>
       </rect>
@@ -332,294 +332,17 @@ COLOR</string>
      </property>
     </widget>
    </widget>
-   <widget class="QGroupBox" name="projectionGroup">
-    <property name="geometry">
-     <rect>
-      <x>730</x>
-      <y>248</y>
-      <width>121</width>
-      <height>231</height>
-     </rect>
-    </property>
-    <property name="title">
-     <string>Projeção</string>
-    </property>
-    <property name="alignment">
-     <set>Qt::AlignCenter</set>
-    </property>
-    <property name="flat">
-     <bool>false</bool>
-    </property>
-    <property name="checkable">
-     <bool>false</bool>
-    </property>
-    <widget class="QDoubleSpinBox" name="vMinValue">
-     <property name="geometry">
-      <rect>
-       <x>50</x>
-       <y>75</y>
-       <width>60</width>
-       <height>27</height>
-      </rect>
-     </property>
-     <property name="decimals">
-      <number>1</number>
-     </property>
-     <property name="minimum">
-      <double>-1000.000000000000000</double>
-     </property>
-     <property name="maximum">
-      <double>1000.000000000000000</double>
-     </property>
-    </widget>
-    <widget class="QDoubleSpinBox" name="hMinValue">
-     <property name="geometry">
-      <rect>
-       <x>50</x>
-       <y>25</y>
-       <width>60</width>
-       <height>27</height>
-      </rect>
-     </property>
-     <property name="decimals">
-      <number>1</number>
-     </property>
-     <property name="minimum">
-      <double>-1000.000000000000000</double>
-     </property>
-     <property name="maximum">
-      <double>1000.000000000000000</double>
-     </property>
-    </widget>
-    <widget class="QDoubleSpinBox" name="hMaxValue">
-     <property name="geometry">
-      <rect>
-       <x>50</x>
-       <y>50</y>
-       <width>60</width>
-       <height>27</height>
-      </rect>
-     </property>
-     <property name="decimals">
-      <number>1</number>
-     </property>
-     <property name="minimum">
-      <double>-1000.000000000000000</double>
-     </property>
-     <property name="maximum">
-      <double>1000.000000000000000</double>
-     </property>
-    </widget>
-    <widget class="QLabel" name="hMinLabel">
-     <property name="geometry">
-      <rect>
-       <x>10</x>
-       <y>25</y>
-       <width>31</width>
-       <height>27</height>
-      </rect>
-     </property>
-     <property name="text">
-      <string>hMin</string>
-     </property>
-     <property name="alignment">
-      <set>Qt::AlignCenter</set>
-     </property>
-    </widget>
-    <widget class="QLabel" name="hMaxLabel">
-     <property name="geometry">
-      <rect>
-       <x>10</x>
-       <y>50</y>
-       <width>31</width>
-       <height>27</height>
-      </rect>
-     </property>
-     <property name="text">
-      <string>hMax</string>
-     </property>
-     <property name="alignment">
-      <set>Qt::AlignCenter</set>
-     </property>
-    </widget>
-    <widget class="QLabel" name="vMinLabel">
-     <property name="geometry">
-      <rect>
-       <x>10</x>
-       <y>75</y>
-       <width>31</width>
-       <height>27</height>
-      </rect>
-     </property>
-     <property name="text">
-      <string>vMin</string>
-     </property>
-     <property name="alignment">
-      <set>Qt::AlignCenter</set>
-     </property>
-    </widget>
-    <widget class="QDoubleSpinBox" name="vMaxValue">
-     <property name="geometry">
-      <rect>
-       <x>50</x>
-       <y>100</y>
-       <width>60</width>
-       <height>27</height>
-      </rect>
-     </property>
-     <property name="decimals">
-      <number>1</number>
-     </property>
-     <property name="minimum">
-      <double>-1000.000000000000000</double>
-     </property>
-     <property name="maximum">
-      <double>1000.000000000000000</double>
-     </property>
-    </widget>
-    <widget class="QDoubleSpinBox" name="nearValue">
-     <property name="geometry">
-      <rect>
-       <x>50</x>
-       <y>125</y>
-       <width>60</width>
-       <height>27</height>
-      </rect>
-     </property>
-     <property name="decimals">
-      <number>1</number>
-     </property>
-     <property name="minimum">
-      <double>-1000.000000000000000</double>
-     </property>
-     <property name="maximum">
-      <double>1000.000000000000000</double>
-     </property>
-    </widget>
-    <widget class="QLabel" name="vMaxLabel">
-     <property name="geometry">
-      <rect>
-       <x>10</x>
-       <y>100</y>
-       <width>31</width>
-       <height>27</height>
-      </rect>
-     </property>
-     <property name="text">
-      <string>vMax</string>
-     </property>
-     <property name="alignment">
-      <set>Qt::AlignCenter</set>
-     </property>
-    </widget>
-    <widget class="QLabel" name="nearLabel">
-     <property name="geometry">
-      <rect>
-       <x>10</x>
-       <y>125</y>
-       <width>31</width>
-       <height>27</height>
-      </rect>
-     </property>
-     <property name="text">
-      <string>Near</string>
-     </property>
-     <property name="alignment">
-      <set>Qt::AlignCenter</set>
-     </property>
-    </widget>
-    <widget class="QLabel" name="farLabel">
-     <property name="geometry">
-      <rect>
-       <x>10</x>
-       <y>150</y>
-       <width>31</width>
-       <height>27</height>
-      </rect>
-     </property>
-     <property name="text">
-      <string>Far</string>
-     </property>
-     <property name="alignment">
-      <set>Qt::AlignCenter</set>
-     </property>
-    </widget>
-    <widget class="QDoubleSpinBox" name="farValue">
-     <property name="geometry">
-      <rect>
-       <x>50</x>
-       <y>150</y>
-       <width>60</width>
-       <height>27</height>
-      </rect>
-     </property>
-     <property name="decimals">
-      <number>1</number>
-     </property>
-     <property name="minimum">
-      <double>-1000.000000000000000</double>
-     </property>
-     <property name="maximum">
-      <double>1000.000000000000000</double>
-     </property>
-    </widget>
-    <widget class="QLabel" name="fovyLabel">
-     <property name="geometry">
-      <rect>
-       <x>10</x>
-       <y>175</y>
-       <width>31</width>
-       <height>27</height>
-      </rect>
-     </property>
-     <property name="text">
-      <string>FOVY</string>
-     </property>
-     <property name="alignment">
-      <set>Qt::AlignCenter</set>
-     </property>
-    </widget>
-    <widget class="QDoubleSpinBox" name="fovyValue">
-     <property name="geometry">
-      <rect>
-       <x>50</x>
-       <y>175</y>
-       <width>60</width>
-       <height>27</height>
-      </rect>
-     </property>
-     <property name="decimals">
-      <number>1</number>
-     </property>
-     <property name="minimum">
-      <double>-1000.000000000000000</double>
-     </property>
-     <property name="maximum">
-      <double>1000.000000000000000</double>
-     </property>
-    </widget>
-    <widget class="QCheckBox" name="isPerspective">
-     <property name="geometry">
-      <rect>
-       <x>20</x>
-       <y>200</y>
-       <width>90</width>
-       <height>22</height>
-      </rect>
-     </property>
-     <property name="text">
-      <string>Perspectiva</string>
-     </property>
-    </widget>
-   </widget>
    <widget class="QComboBox" name="toningValue">
     <property name="geometry">
      <rect>
-      <x>639</x>
-      <y>320</y>
+      <x>640</x>
+      <y>10</y>
       <width>71</width>
       <height>26</height>
      </rect>
+    </property>
+    <property name="layoutDirection">
+     <enum>Qt::LeftToRight</enum>
     </property>
     <item>
      <property name="text">
@@ -640,21 +363,21 @@ COLOR</string>
    <widget class="QPushButton" name="ResetButton">
     <property name="geometry">
      <rect>
-      <x>640</x>
-      <y>290</y>
-      <width>71</width>
+      <x>730</x>
+      <y>445</y>
+      <width>121</width>
       <height>26</height>
      </rect>
     </property>
     <property name="text">
-     <string>Reset</string>
+     <string>Reset Params</string>
     </property>
    </widget>
    <widget class="QPushButton" name="editButton">
     <property name="geometry">
      <rect>
       <x>640</x>
-      <y>260</y>
+      <y>330</y>
       <width>71</width>
       <height>26</height>
      </rect>
@@ -668,7 +391,6 @@ COLOR</string>
    <zorder>changeColor</zorder>
    <zorder>observerGroup</zorder>
    <zorder>lightingGroup</zorder>
-   <zorder>projectionGroup</zorder>
    <zorder>toningValue</zorder>
    <zorder>ResetButton</zorder>
    <zorder>editButton</zorder>

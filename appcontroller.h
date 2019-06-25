@@ -69,11 +69,6 @@ private slots:
 
     void onLightingValueChanged(int x, int y, int z);
     void onCameraRotationChanged(int x, int y, int z);
-
-    void onCameraClippingChanged(int, int);
-    void onCameraLimitsChanged(int, int, int, int);
-    void onCameraFovChanged(double);
-    void onCameraPerspectiveChanged(bool);
 };
 
 #endif // APPCONTROLLER_H

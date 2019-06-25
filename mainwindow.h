@@ -58,19 +58,11 @@ private slots:
     void on_changeColor_released();
 
     void on_obsXValue_valueChanged(double arg1);
-    void on_hMinValue_valueChanged(double arg1);
     void on_obsYValue_valueChanged(double arg1);
     void on_obsZValue_valueChanged(double arg1);
     void on_lightValueX_valueChanged(double arg1);
     void on_lightValueY_valueChanged(double arg1);
     void on_lightValueZ_valueChanged(double arg1);
-    void on_hMaxValue_valueChanged(double arg1);
-    void on_vMinValue_valueChanged(double arg1);
-    void on_vMaxValue_valueChanged(double arg1);
-    void on_nearValue_valueChanged(double arg1);
-    void on_farValue_valueChanged(double arg1);
-    void on_fovyValue_valueChanged(double arg1);
-    void on_isPerspective_stateChanged(int arg1);
     void on_toningValue_currentTextChanged(const QString &arg1);
     void on_ResetButton_released();
     void on_editButton_released();
