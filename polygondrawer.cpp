@@ -158,6 +158,11 @@ map<QVector3D*, QVector3D>> PolygonDrawer::preparePoints() {
     }
 
     auto frontNormal = QVector3D::normal(*front[0] - *front[1], *front[2] - *front[1]);
+    if (frontNormal.z() > 0) {
+        reverse(front.begin(), front.end());
+        reverse(back.begin(), back.end());
+    }
+
     for (auto v : front)
         normals[v] = frontNormal / 3;
 
