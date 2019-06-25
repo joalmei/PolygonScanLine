@@ -10,6 +10,14 @@ private:
     QVector3D rot;
 
 public:
+    double
+        hMin,   hMax,
+        vMin,   vMax,
+        nearZ,  farZ,
+        aspect, fovY;
+    bool isPerspective = true;
+
+public:
     Camera(QVector3D pos, QVector3D rot);
 
     QVector3D GetPosition() const;

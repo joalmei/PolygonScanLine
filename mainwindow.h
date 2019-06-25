@@ -48,6 +48,10 @@ signals:
 
     void lightingValueChanged(int, int, int);
     void cameraRotationChanged(int, int, int);
+    void cameraClippingChanged(int, int);
+    void cameraLimitsChanged(int, int, int, int);
+    void cameraFovChanged(double);
+    void cameraPerspectiveChanged(bool);
 
 private slots:
     void on_ClearButton_clicked();

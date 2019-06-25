@@ -109,36 +109,47 @@ void MainWindow::on_lightValueZ_valueChanged(double z) {
 
 // ==================================================================================================
 void MainWindow::on_hMinValue_valueChanged(double h) {
-    openGlCanvas->sethMin(h);
+    emit cameraLimitsChanged(static_cast<int>(h),
+                             static_cast<int>(this->ui->hMaxValue->value()),
+                             static_cast<int>(this->ui->vMinValue->value()),
+                             static_cast<int>(this->ui->vMaxValue->value()));
 }
 
 void MainWindow::on_hMaxValue_valueChanged(double h) {
-    openGlCanvas->sethMax(h);
+    emit cameraLimitsChanged(static_cast<int>(this->ui->hMinValue->value()),
+                             static_cast<int>(h),
+                             static_cast<int>(this->ui->vMinValue->value()),
+                             static_cast<int>(this->ui->vMaxValue->value()));
 }
 
 void MainWindow::on_vMinValue_valueChanged(double v) {
-    openGlCanvas->setvMin(v);
+    emit cameraLimitsChanged(static_cast<int>(this->ui->hMinValue->value()),
+                             static_cast<int>(this->ui->hMaxValue->value()),
+                             static_cast<int>(v),
+                             static_cast<int>(this->ui->vMaxValue->value()));
 }
 
 void MainWindow::on_vMaxValue_valueChanged(double v) {
-    openGlCanvas->setvMax(v);
+    emit cameraLimitsChanged(static_cast<int>(this->ui->hMinValue->value()),
+                             static_cast<int>(this->ui->hMaxValue->value()),
+                             static_cast<int>(this->ui->vMinValue->value()),
+                             static_cast<int>(v));
 }
 
 void MainWindow::on_nearValue_valueChanged(double n) {
-    openGlCanvas->setNear(n);
+    emit cameraClippingChanged(static_cast<int>(n), static_cast<int>(this->ui->farValue->value()));
 }
 
 void MainWindow::on_farValue_valueChanged(double f) {
-    openGlCanvas->setFar(f);
+    emit cameraClippingChanged(static_cast<int>(this->ui->nearValue->value()), static_cast<int>(f));
 }
 
 void MainWindow::on_fovyValue_valueChanged(double fov) {
-    openGlCanvas->setFovY(fov);
+    emit cameraFovChanged(fov);
 }
 
 void MainWindow::on_isPerspective_stateChanged(int state) {
-    (void) state;
-    openGlCanvas->toggleProjection();
+    emit cameraPerspectiveChanged(state == 1);
 }
 
 // ==================================================================================================
@@ -178,17 +189,6 @@ void MainWindow::onReset() {
     emit lightingValueChanged(0, 0, 1);
     this->ui->toningValue->setCurrentIndex(0);
     emit shadingChanged("Flat");
-
-    openGlCanvas->sethMin(-50);
-    openGlCanvas->sethMax(50);
-    openGlCanvas->setvMin(-50);
-    openGlCanvas->setvMax(50);
-    openGlCanvas->setNear(10);
-    openGlCanvas->setFar(50);
-    openGlCanvas->setFovY(100);
-    openGlCanvas->setxRot(0);
-    openGlCanvas->setyRot(0);
-    openGlCanvas->setzRot(0);
 }
 
 void MainWindow::on_editButton_released() {

@@ -27,21 +27,6 @@ public:
     void AddDrawer(Drawer*);
     void ClearScreen();
 
-
-    void setvMax (GLdouble arg1);
-    void setvMin (GLdouble arg1);
-    void sethMax (GLdouble arg1);
-    void sethMin (GLdouble arg1);
-    void setFar (GLdouble arg1);
-    void setNear (GLdouble arg1);
-
-    void setxRot (GLdouble rot);
-    void setyRot (GLdouble rot);
-    void setzRot (GLdouble rot);
-
-    void toggleProjection ();
-    void setFovY(GLdouble arg1);
-
 private:
     QColor pointsColor;
     vector<Drawer*> drawers;
@@ -49,24 +34,10 @@ private:
 
     // VIEWING MEMBERS
     // GLint height, width;
-    GLdouble
-        hMin,   hMax,
-        vMin,   vMax,
-        nearZ,  farZ,
-        aspect, fovY;
-    GLboolean isPerspective;
 
     // VIEWING METHODS
     void setParameters();
     void perspectiveGL();
-
-    // OBSERVER MEMBERS
-    QVector3D *up, *eye, *center;
-    GLdouble xRot, yRot, zRot;
-    QPoint lastPos;
-
-    // OBSERVER METHODS
-    void LookAt();
 
 protected:
     void initializeGL();

@@ -254,12 +254,17 @@ std::pair<vector<vector<QVector3D*>>, map<QVector3D*, QVector3D>> PolygonDrawer:
     rot.rotate(rotation.y(), 0, 1, 0);
     rot.rotate(rotation.z(), 0, 0, 1);
 
-    for (size_t f = 0; f < faces.size(); f++) {
-        for (size_t i = 0; i < faces[f].size(); i++) {
-            (*faces[f][i]) = t1 * (*faces[f][i]);
-            (*faces[f][i]) = rot * (*faces[f][i]);
-            (*faces[f][i]) = t2 * (*faces[f][i]);
-        }
+    for (size_t i = 0; i < front.size(); i++) {
+        cout << "before: " << front[i]->x() << " " << front[i]->y() << " " << front[i]->z() << endl;
+        (*front[i]) = t1 * (*front[i]);
+        (*front[i]) = rot * (*front[i]);
+        (*front[i]) = t2 * (*front[i]);
+
+        (*back[i]) = t1 * (*back[i]);
+        (*back[i]) = rot * (*back[i]);
+        (*back[i]) = t2 * (*back[i]);
+
+        cout << "after: " << front[i]->x() << " " << front[i]->y() << " " << front[i]->z() << endl;
     }
 
     return make_pair(faces, normals);
@@ -346,6 +351,7 @@ void PolygonDrawer::oddEvenFillMethodGOURAULD(vector<QVector3D*>& vertices,
     }
 }
 
+// ==================================================================================================
 void PolygonDrawer::oddEvenFillMethodPHONG(vector<QVector3D *> &vertices,
                                            map<QVector3D *, QVector3D> &normals,
                                            QColor &paintColor,
@@ -424,6 +430,14 @@ void PolygonDrawer::oddEvenFillMethodPHONG(vector<QVector3D *> &vertices,
 
 
 
+//void CanvasOpenGL::perspectiveGL() {
+//    GLdouble fW, fH;
+
+//    fH = tan(this->fovY / 360.0 * M_PI) * this->nearZ;
+//    fW = fH * this->aspect;
+
+//    glFrustum(-fW, fW, -fH, fH, this->nearZ, this->farZ);
+//}
 
 //auto normal = QVector3D::normal(QVector3D(vertices[0]->x() - vertices[1]->x(),vertices[0]->y() - vertices[1]->y(), vertices[0]->y() - vertices[1]->y()),
 //                                QVector3D(vertices[2]->x() - vertices[1]->x(),vertices[2]->y() - vertices[1]->y(), vertices[2]->y() - vertices[1]->y()));

@@ -19,6 +19,11 @@ AppController::AppController(MainWindow* window) {
     connect(window, &MainWindow::lightingValueChanged, this, &AppController::onLightingValueChanged);
     connect(window, &MainWindow::cameraRotationChanged, this, &AppController::onCameraRotationChanged);
     connect(window, &MainWindow::shadingChanged, this, &AppController::onShadingChanged);
+
+    connect(window, &MainWindow::cameraClippingChanged, this, &AppController::onCameraClippingChanged);
+    connect(window, &MainWindow::cameraLimitsChanged, this, &AppController::onCameraLimitsChanged);
+    connect(window, &MainWindow::cameraFovChanged, this, &AppController::onCameraFovChanged);
+    connect(window, &MainWindow::cameraPerspectiveChanged, this, &AppController::onCameraPerspectiveChanged);
 }
 
 // ==================================================================================================
@@ -120,6 +125,26 @@ void AppController::onCameraRotationChanged(int x, int y, int z) {
     camera->SetRotation(rot);
 
     window->Canvas()->update();
+}
+
+void AppController::onCameraClippingChanged(int n , int f) {
+    camera->nearZ = n;
+    camera->farZ = f;
+}
+
+void AppController::onCameraLimitsChanged(int hmin, int hmax, int vmin, int vmax) {
+    camera->hMin = hmin;
+    camera->hMax = hmax;
+    camera->vMin = vmin;
+    camera->vMax = vmax;
+}
+
+void AppController::onCameraFovChanged(double fov) {
+    camera->fovY = fov;
+}
+
+void AppController::onCameraPerspectiveChanged(bool isPersp) {
+    camera->isPerspective = isPersp;
 }
 
 // ==================================================================================================
